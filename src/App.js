@@ -17,7 +17,7 @@ function App() {
 
         ... no changes in this part ...
 
-        <p>The current time is {currentTime}.</p>
+        <p>The current time: {currentTime}.</p>
       </header>
     </div>
   );
