@@ -17,7 +17,7 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
 #this is a model of the database columns
-class Prescription(db.Model):
+class Prescriptions(db.Model):
      id = db.Column(db.Integer, primary_key=True)
      name = db.Column(db.String(100))
      dosage = db.Column(db.String(100))
@@ -47,7 +47,7 @@ def add_prescription():
     name = request.json['name']
     dosage = request.json['dosage']
 
-    prescriptions = Prescription(name, dosage)
+    prescriptions = Prescriptions(name, dosage)
     db.session.add(prescriptions)
     db.session.commit()
 
