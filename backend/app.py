@@ -1,4 +1,5 @@
 from dataclasses import fields
+import json
 import os
 from unicodedata import name
 from flask import Flask, request, jsonify
@@ -24,7 +25,6 @@ class Prescriptions(db.Model):
      
      def __init__(self, name, dosage):
          self.name = name
-         self.dosage = dosage
 
 
 class Prescription_Schema(ma.Schema):
@@ -37,9 +37,15 @@ prescriptions_schema = Prescription_Schema(many=True)
 
 @app.route('/get', methods=['GET'])
 def get_prescription():
-    return {
-        'Hello' : 'World'
-    }
+    all_prescriptions = Prescriptions.query.all()
+    results = prescriptions_schema.dump(all_prescriptions)
+    return jsonify(results)
+
+
+@app.route('/get/<id>', methods=['GET'])
+def post_details(id):
+    prescription = Prescriptions.query.get(id)
+    return prescription_schema.jsonify(prescription)
 
 
 @app.route('/add', methods=['POST'])
