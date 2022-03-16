@@ -60,6 +60,37 @@ def add_prescription():
     return prescription_schema.jsonify(prescriptions)
 
 
+@app.route('/update/<id>', methods=['PUT'])
+def update_prescription(id):
+    prescription = Prescriptions.query.get(id)
+
+    name = request.json['name']
+    dosage = request.json['dosage']
+
+    prescription.name = name
+    prescription.dosage = dosage
+
+    db.session.commit()
+    return prescription_schema.jsonify(prescription)
+
+
+# @app.route('/delete/<id>/', methods = ['DELETE'])
+# def article_delete(id):
+#     article = Articles.query.get(id)
+#     db.session.delete(article)
+#     db.session.commit()
+
+#     return article_schema.jsonify(article)
+
+#this deletes a record from the database
+@app.route('/delete/<id>', methods=['DELETE'])
+def prescription_deleted(id):
+    prescription = Prescriptions.query.get(id)
+    db.session.delete(prescription)
+    db.session.commit()
+
+    return prescription_schema.jsonify(prescription)
+
 if __name__ == '__main__':
     app.run(debug=True)
 
