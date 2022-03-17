@@ -59,7 +59,7 @@ def add_prescription():
 
     return prescription_schema.jsonify(prescriptions)
 
-
+#this updates a record from  the database
 @app.route('/update/<id>', methods=['PUT'])
 def update_prescription(id):
     prescription = Prescriptions.query.get(id)
@@ -74,13 +74,6 @@ def update_prescription(id):
     return prescription_schema.jsonify(prescription)
 
 
-# @app.route('/delete/<id>/', methods = ['DELETE'])
-# def article_delete(id):
-#     article = Articles.query.get(id)
-#     db.session.delete(article)
-#     db.session.commit()
-
-#     return article_schema.jsonify(article)
 
 #this deletes a record from the database
 @app.route('/delete/<id>', methods=['DELETE'])
