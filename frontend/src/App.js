@@ -7,9 +7,12 @@ function App() {
 
   useEffect(() => {
     fetch('http://127.0.0.1:5000/get', {
-      'method':'GET',
       headers: {
-        'Content-Type':'application/json'
+        'method':'GET',
+        headers:{
+          'Content-Type':'application/json'
+        }
+
       }
     })
     .then(resp => resp.json())
@@ -19,8 +22,15 @@ function App() {
   },[])
   return (
     <div className="App">
-        <h1>Hello</h1>
-
+        <h1>Example</h1>
+      {prescriptions.map(prescription => {
+        return (
+          <div key = {prescription.id}>
+            <h3>{prescription.name}: {prescription.dosage}</h3>
+       
+          </div>
+        )
+      })}
     </div>
   );
 }
