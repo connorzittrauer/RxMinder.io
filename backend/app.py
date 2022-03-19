@@ -25,6 +25,7 @@ class Prescriptions(db.Model):
      
      def __init__(self, name, dosage):
          self.name = name
+         self.dosage = dosage
 
 
 class Prescription_Schema(ma.Schema):
