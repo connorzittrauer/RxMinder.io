@@ -1,0 +1,26 @@
+.header {
+    width: 100%;
+    background-color: #557B83;
+    height: 100px;
+}
+/* #A2D5AB */
+.headerTitle {
+    color: gray;
+    float: left;
+    margin: 0;
+    border: solid;
+    border-color: gray;
+    padding-top: 10px;
+    height: 87px;
+    width: 10%;
+    background-color: #39AEA9;
+}
+
+.middleHeader {
+    margin: 0;
+    font-size: 24px;
+    padding-top: 10px;
+}
+.middleContainer {
+    margin-right: 10%; 
+}
