@@ -6,10 +6,12 @@ function Form(props) {
     const[dosage, setDosage] = useState(props.prescription.dosage)
 
     const updateName = () => {
-        APIService.UpdateName(props.prescription.id, {name, dosage})
-        .then(resp => console.log(resp))
-        .catch(error => console.log(error))
-    }
+      APIService.UpdateName(props.prescription.id, {name, dosage})
+      .then(resp => props.updatedData(resp))
+      .catch(error=> console.log(error))
+
+  }
+
   return (
     <div>{props.prescription ? (
 
