@@ -5,10 +5,12 @@ from unicodedata import name
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow 
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app)
+#cors = CORS(app, resources={r"/update/*": {"origins": "*"}})
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 #this configures the database/joins it with the flask application
@@ -63,15 +65,14 @@ def add_prescription():
 
 #this updates a record from  the database
 @app.route('/update/<id>', methods=['PUT'])
+
 def update_prescription(id):
     prescription = Prescriptions.query.get(id)
-
     name = request.json['name']
     dosage = request.json['dosage']
 
     prescription.name = name
     prescription.dosage = dosage
-
     db.session.commit()
     return prescription_schema.jsonify(prescription)
 
