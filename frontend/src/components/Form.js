@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import APIService from './APIService'
 
 function Form(props) {
-    const[name, setName] = useState(props.prescription.name)
-    const[dosage, setDosage] = useState(props.prescription.dosage)
+    const[name, setName] = useState('')
+    const[dosage, setDosage] = useState('')
+
+    useEffect (() => {
+      setName(props.prescription.name)
+      setDosage(props.prescription.dosage)
+    },[props.prescription])
 
     const updateName = () => {
       APIService.UpdateName(props.prescription.id, {name, dosage})

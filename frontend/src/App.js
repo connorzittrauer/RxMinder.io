@@ -30,7 +30,7 @@ function App() {
 
   const updatedData = (prescription) => {
     const new_prescription = prescriptions.map(my_prescription =>  {
-      if (my_prescription.id == prescription.id) {
+      if (my_prescription.id === prescription.id) {
         return prescription
       } else {
         return my_prescription
