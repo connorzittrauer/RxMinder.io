@@ -28,6 +28,18 @@ function App() {
     setEditedPrescription(prescription)
   }
 
+  const updatedData = (prescription) => {
+    const new_prescription = prescriptions.map(my_prescription =>  {
+      if (my_prescription.id == prescription.id) {
+        return prescription
+      } else {
+        return my_prescription
+      }
+    })
+    setPrescriptions(new_prescription)
+  } 
+
+
   return (
     <div className="App">
         <h1>Example</h1>
@@ -35,7 +47,9 @@ function App() {
         <br/>
         <p>Here is a simple example of displaying data from the database to the front end, served up from the flask back-end</p>
         <PrescriptionList prescriptions = {prescriptions} editPrescription = {editPrescription}/>
-        {editedPrescription ? <Form prescription = {editedPrescription}/> : null}
+
+
+        {editedPrescription ? <Form prescription = {editedPrescription} updatedData = {updatedData}/> : null}
         
     </div>
   );

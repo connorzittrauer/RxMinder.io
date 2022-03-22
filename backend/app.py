@@ -9,9 +9,6 @@ from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app)
-# cors = CORS(app, resources={r'*': {'origins':'*'}}, supports_credentials=True)
-# app.config['CORS_HEADERS'] = 'Content-Type'
-# CORS(app, resources={ r'/*': {'origins': config['ORIGINS']}}, supports_credentials=True)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -66,10 +63,9 @@ def add_prescription():
     return prescription_schema.jsonify(prescriptions)
 
 #this updates a record from  the database
-@app.route('/update/<id>', methods=['PUT'])
+@app.route('/update/<id>', methods=['GET', 'PUT'])
 def update_prescription(id):
     prescription = Prescriptions.query.get(id)
-
 
     name = request.json['name']
     dosage = request.json['dosage']
@@ -77,7 +73,7 @@ def update_prescription(id):
     prescription.name = name
     prescription.dosage = dosage
     db.session.commit()
-    
+     
     return prescription_schema.jsonify(prescription)
 
 
@@ -90,16 +86,6 @@ def prescription_deleted(id):
     db.session.commit()
 
     return prescription_schema.jsonify(prescription)
-
-
-@app.after_request
-def after_request(response):
-  response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5000')
-  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-  response.headers.add('Access-Control-Allow-Credentials', 'true')
-  return response
-
 
 
 if __name__ == '__main__':
