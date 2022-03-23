@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import PrescriptionList from './components/PrescriptionList';
 import Form from './components/Form';
+import AddButton from './components/AddButton';
 
 function App() {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -47,7 +48,8 @@ function App() {
         <br/>
         <p>Here is are your prescriptions</p>
         <PrescriptionList prescriptions = {prescriptions} editPrescription = {editPrescription}/>
-
+        {/* <button>Add A New Prescription</button> */}
+        <AddButton></AddButton>
 
         {editedPrescription ? <Form prescription = {editedPrescription} updatedData = {updatedData}/> : null}
         

@@ -19,7 +19,6 @@ function Form(props) {
 
   return (
     <div>{props.prescription ? (
-
         <div className="mb-3">
               
         <label htmlFor="name" className='form-label'>Name</label>
@@ -45,6 +44,7 @@ function Form(props) {
         onClick={updateName}
         className='btn-update'
         >Update</button>
+
         </div>
 
     ):null}
