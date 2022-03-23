@@ -10,4 +10,18 @@ export default class APIService {
           })
           .then(resp => resp.json())
     }
+
+    static AddPrescription(id, name, dosage) {
+      return fetch(`http://127.0.0.1:5000/add`, {
+         'method':'POST',
+          headers: {
+            'Content-Type':'application/json',
+          },
+          body: JSON.stringify(name, dosage)
+          
+        })
+        .then(resp => resp.json())
+  }
+
+
 }
