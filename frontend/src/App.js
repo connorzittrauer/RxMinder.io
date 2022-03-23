@@ -45,7 +45,7 @@ function App() {
         <h1>Example</h1>
         <br/>
         <br/>
-        <p>Here is a simple example of displaying data from the database to the front end, served up from the flask back-end</p>
+        <p>Here is are your prescriptions</p>
         <PrescriptionList prescriptions = {prescriptions} editPrescription = {editPrescription}/>
 
 
