@@ -29,7 +29,7 @@ return (
         <input onChange={event => setDosage(event.target.value)} placeholder='dosage'/>
         <button 
         onClick={AddPrescription}
-        type="button">submit</button>
+        type="submit">submit</button>
       </form>
     )}
   </div>
