@@ -6,15 +6,30 @@ const [showForm, setFormStatus] = useState(false);
 
 const viewData = () => setFormStatus(true);
 
+//these name and dosage variables are retrieved from the input form below and passed to the API service
+const[name, setName] = useState('')
+const[dosage, setDosage] = useState('')
+
+
+const AddPrescription = () => {
+    APIService.AddPrescription(name, dosage)
+    .then(resp => props.updatedData(resp))
+    .then(console.log(name, dosage))
+    .catch(error=> console.log(error))
+
+}
+
+
 return (
   <div>
-    {/* <a href="#adduser" onClick={viewData}>Add new user</a> */}
     <button onClick={viewData}>Add Another Prescription</button>
     {showForm && (
       <form>
-        <input />
-        <input />
-        <button type="submit">submit</button>
+        <input onChange={event => setName(event.target.value)} placeholder='prescription name'/>
+        <input onChange={event => setDosage(event.target.value)} placeholder='dosage'/>
+        <button 
+        onClick={AddPrescription}
+        type="button">submit</button>
       </form>
     )}
   </div>
