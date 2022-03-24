@@ -8,7 +8,6 @@ from flask_marshmallow import Marshmallow
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-#CORS(app)
 cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 add_config  = {
@@ -60,7 +59,6 @@ def post_details(id):
 
 
 @app.route('/add', methods=['POST'])
-
 def add_prescription():
     name = request.json['name']
     dosage = request.json['dosage']

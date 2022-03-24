@@ -18,8 +18,6 @@ const AddPrescription = () => {
     .catch(error=> console.log(error))
 
 }
-
-
 return (
   <div>
     <button onClick={viewData}>Add Another Prescription</button>
@@ -35,5 +33,4 @@ return (
   </div>
 );
 }
-
 export default AddButton
