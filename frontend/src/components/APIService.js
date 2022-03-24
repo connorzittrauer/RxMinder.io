@@ -12,7 +12,8 @@ export default class APIService {
     }
 
     static AddPrescription(name, dosage) {
-      return fetch(`http://127.0.0.1:5000/add`, {
+      return fetch(`http://127.0.0.1:5000/add`, 
+      {
          'method':'POST',
           headers: {
             'Content-Type':'application/json',

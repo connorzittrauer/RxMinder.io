@@ -8,13 +8,21 @@ from flask_marshmallow import Marshmallow
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
+cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+
+add_config  = {
+  "origins": ["http://localhost:3000"],
+  "methods": ["OPTIONS", "GET", "POST"],
+  "allow_headers": ["Authorization", "Content-Type"]
+}
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 #this configures the database/joins it with the flask application
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'test_database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -52,6 +60,7 @@ def post_details(id):
 
 
 @app.route('/add', methods=['POST'])
+
 def add_prescription():
     name = request.json['name']
     dosage = request.json['dosage']
@@ -59,7 +68,6 @@ def add_prescription():
     prescriptions = Prescriptions(name, dosage)
     db.session.add(prescriptions)
     db.session.commit()
-
     return prescription_schema.jsonify(prescriptions)
 
 #this updates a record from  the database
@@ -86,6 +94,7 @@ def prescription_deleted(id):
     db.session.commit()
 
     return prescription_schema.jsonify(prescription)
+
 
 
 if __name__ == '__main__':

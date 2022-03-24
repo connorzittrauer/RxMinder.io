@@ -47,9 +47,8 @@ function App() {
         <h1>Example</h1>
         <br/>
         <br/>
-        <p>Here is are your prescriptions</p>
+        <p>Here are your prescriptions</p>
         <PrescriptionList prescriptions = {prescriptions} editPrescription = {editPrescription}/>
-        {/* <button>Add A New Prescription</button> */}
         <AddButton></AddButton>
 
 

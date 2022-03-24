@@ -12,7 +12,7 @@ const[dosage, setDosage] = useState('')
 
 
 const AddPrescription = () => {
-    APIService.AddPrescription(name, dosage)
+    APIService.AddPrescription({name, dosage})
     .then(resp => props.updatedData(resp))
     .then(console.log(name, dosage))
     .catch(error=> console.log(error))
