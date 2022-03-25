@@ -12,7 +12,7 @@ cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 add_config  = {
   "origins": ["http://localhost:3000"],
-  "methods": ["OPTIONS", "GET", "POST"],
+  "methods": ["GET", "POST"],
   "allow_headers": ["Authorization", "Content-Type"]
 }
 
