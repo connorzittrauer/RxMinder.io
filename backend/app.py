@@ -1,7 +1,8 @@
-from dataclasses import fields
+from dataclasses import dataclass, fields
 import json
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
+import time, datetime
 from unicodedata import name
 from flask import Flask, request, jsonify ,render_template, redirect, request, url_for, flash
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
@@ -83,6 +84,12 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
+
+
+@app.route('/time')
+def get_current_time():
+    currentTime = datetime.datetime.now()
+    return {'time': currentTime}
 
 #this is a model of the database columns
 class Prescriptions(db.Model):

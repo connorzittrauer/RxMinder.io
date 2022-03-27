@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import APIService from "./APIService";
-import Prescription from "./Prescription";
-import AddPrescription from "./AddPerscription";
+import APIService from "../components/APIService";
+import Prescription from "../components/Prescription";
+import AddPrescription from "../components/AddPerscription";
 
-const Main = () => {
+const Medications = () => {
     /* prescriptions are saved in an array */
     const [prescriptions, setPrescriptions] = useState([])
     //making a call to the APIservice
@@ -38,4 +38,4 @@ const Main = () => {
     )
 }
 
-export default Main;
+export default Medications;
