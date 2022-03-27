@@ -1,28 +1,18 @@
 export default class APIService {
-    static UpdateName(id, name) {
-        return fetch(`http://127.0.0.1:5000/update/${id}`, {
-           'method':'PUT',
-            headers: {
-              'Content-Type':'application/json',
-            },
-            body: JSON.stringify(name)
-            
-          })
+  //call fetch can be used for any endpoint its parameters define how it is called
+    static CallFetch(url, method, body={}) {
+      let bodyContent = null;
+      if (method === "POST" || method === "PUT") {
+        bodyContent=JSON.stringify(body)
+      }
+
+        return fetch(`http://127.0.0.1:5000/${url}`, {
+          "method": method,
+          headers: {
+            'Content-Type':'application/json'
+          },
+          body: bodyContent
+        })
           .then(resp => resp.json())
     }
-
-    static AddPrescription(name, dosage) {
-      return fetch(`http://127.0.0.1:5000/add`, 
-      {
-         'method':'POST',
-          headers: {
-            'Content-Type':'application/json',
-          },
-          body: JSON.stringify(name, dosage)
-          
-        })
-        .then(resp => resp.json())
-  }
-
-
 }

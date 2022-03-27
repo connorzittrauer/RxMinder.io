@@ -1,0 +1,43 @@
+/* this will hold the styling for the application */
+
+.pCard {
+  width: 50%;
+  height: 150px;
+  margin: auto;
+  margin-bottom: 15px;
+  text-align: center;
+  border: 1px solid #61dafb;
+  box-shadow: 3px 6px #093f4e;
+}
+
+.formDiv {
+  width: 50%;
+  margin: auto;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.cardText {
+  margin-top: 20px;
+  color: #61dafb;
+  font-size: 20px;
+}
+
+.buttonContainer {
+  margin-bottom: 20px;
+}
+
+.btn {
+  font-size: 15px;
+}
+
+.nameField {
+  margin-top: 20px;
+  margin-left: 18px;
+
+}
+.doseField {
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+}
