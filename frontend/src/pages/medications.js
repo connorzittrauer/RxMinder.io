@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import APIService from "./APIService";
-import Prescription from "./Prescription";
-import AddPrescription from "./AddPerscription";
+import APIService from "../components/APIService";
+import Prescription from "../components/Prescription";
+import AddPrescription from "../components/AddPerscription";
 
 const Main = () => {
     /* prescriptions are saved in an array */
