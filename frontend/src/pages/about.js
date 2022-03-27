@@ -2,10 +2,9 @@ import React from "react";
   
 const About = () => {
   return (
-    <div>
+    <div className="page">
       <h1>
-        GeeksforGeeks is a Computer 
-        Science portal for geeks.
+          We at rxminder.io are dedicated to making sure you take your prescriptions on time. 
       </h1>
     </div>
   );

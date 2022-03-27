@@ -6,7 +6,7 @@ import './App.css';
 import NavBar from './components/NavBar';
 import Home from './pages';
 import About from './pages/about';
-import Blogs from './pages/blogs';
+import Interactions from './pages/interactions';
 
 function App() {
   return (
@@ -14,8 +14,9 @@ function App() {
       <NavBar />
       <Routes>
           <Route exact path='/' element={<Home />} />
+          <Route path='/medications' element={<Main />} />
           <Route path='/about' element={<About/>} />
-          <Route path='/blogs' element={<Blogs/>} />
+          <Route path='/interactions' element={<Interactions/>} />
       </Routes>
       </Router>
   );
