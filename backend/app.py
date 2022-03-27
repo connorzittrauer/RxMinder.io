@@ -1,6 +1,7 @@
-from dataclasses import fields
+from dataclasses import dataclass, fields
 import json
 import os
+import time, datetime
 from unicodedata import name
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -25,6 +26,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
+
+
+@app.route('/time')
+def get_current_time():
+    currentTime = datetime.datetime.now()
+    return {'time': currentTime}
 
 #this is a model of the database columns
 class Prescriptions(db.Model):
