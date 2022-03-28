@@ -1,11 +1,7 @@
 from dataclasses import dataclass, fields
 import json
 import os
-<<<<<<< HEAD
 import time, datetime
-=======
-from werkzeug.security import generate_password_hash, check_password_hash
->>>>>>> UserLogin
 from unicodedata import name
 from flask import Flask, request, jsonify ,render_template, redirect, request, url_for, flash
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
@@ -22,7 +18,7 @@ cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 add_config  = {
   "origins": ["http://localhost:3000"],
-  "methods": ["GET", "POST"],
+  "methods": ["GET", "POST", "PATCH", "DELETE"],
   "allow_headers": ["Authorization", "Content-Type"]
 }
 
@@ -205,8 +201,8 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Account Created.')
-        flash('You can now login')
         return redirect(url_for('login'))
+        flash('You can now login')
     return render_template('register.html', form=form)
 
 if __name__ == '__main__':
