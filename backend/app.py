@@ -25,7 +25,7 @@ add_config  = {
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 #this configures the database/joins it with the flask application
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'test_database.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'master.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'hard to guess string'
 
