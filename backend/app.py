@@ -51,9 +51,12 @@ class Prescriptions(db.Model):
      name = db.Column(db.String(100))
      dosage = db.Column(db.String(100))
      
+     times = db.relationship('Times', backref='prescription', lazy=True)
+
      def __init__(self, name, dosage):
          self.name = name
          self.dosage = dosage
+    
 
 class Prescription_Schema(ma.Schema):
     class Meta:
@@ -64,7 +67,7 @@ prescriptions_schema = Prescription_Schema(many=True)
 
 class Times(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    rxid = db.Column(db.Integer)
+    rxid = db.Column(db.Integer, db.ForeignKey('prescriptions.id'))
     time = db.Column(db.String(100))
     meridiem = db.Column(db.String(100))
 
@@ -93,8 +96,13 @@ def get_times():
 #query by the specific prescription 
 @app.route('/times/<rxid>', methods=['GET'])
 def get_specific_prescription_time(rxid):       
-    time = Times.query.get(rxid)
-    return time_schema.jsonify(time)
+    prescription = Prescriptions.query.get(rxid)
+
+    time_list = []
+
+    for t in prescription.times:
+        time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
+    return jsonify(time_list)
 
 
 @app.route('/get', methods=['GET'])
