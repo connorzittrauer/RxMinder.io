@@ -3,7 +3,8 @@ import json
 import os
 import time, datetime
 from unicodedata import name
-from flask import Flask, request, jsonify ,render_template, redirect, request, url_for, flash
+from unittest import result
+from flask import Flask, request, jsonify ,render_template, redirect, request, session, url_for, flash
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow 
@@ -34,6 +35,129 @@ ma = Marshmallow(app)
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
+
+
+
+#this provides current time endpoint for the splash page on the front
+@app.route('/time')
+def get_current_time():
+    currentTime = datetime.datetime.now()
+    return {'time': currentTime}
+
+
+#this is a model of the database columns
+class Prescriptions(db.Model):
+     id = db.Column(db.Integer, primary_key=True)
+     name = db.Column(db.String(100))
+     dosage = db.Column(db.String(100))
+     
+     def __init__(self, name, dosage):
+         self.name = name
+         self.dosage = dosage
+
+class Prescription_Schema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'dosage')
+prescription_schema = Prescription_Schema()
+prescriptions_schema = Prescription_Schema(many=True)
+
+
+class Times(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rxid = db.Column(db.Integer)
+    time = db.Column(db.String(100))
+    meridiem = db.Column(db.String(100))
+
+    def __init__(self, rxid, time, meridiem):
+        self.rxid = rxid
+        self.time = time
+        self.meridiem = meridiem
+
+
+class Times_Schema(ma.Schema):
+    class Meta:
+        fields = ('id', 'rxid', 'time', 'meridiem')
+time_schema = Times_Schema()
+times_schema = Times_Schema(many=True)
+
+
+
+#query all of the times in the times tables
+@app.route('/times', methods=['GET'])
+def get_times():
+    all_times = Times.query.all()
+    results = times_schema.dump(all_times)
+    return jsonify(results)
+
+
+#query by the specific prescription 
+@app.route('/times/<rxid>', methods=['GET'])
+def get_specific_prescription_time(rxid):        
+    time = Times.query.get(rxid)
+    return time_schema.jsonify(time)
+
+
+@app.route('/get', methods=['GET'])
+def get_prescription():
+    all_prescriptions = Prescriptions.query.all()
+    results = prescriptions_schema.dump(all_prescriptions)
+    return jsonify(results)
+
+
+@app.route('/get/<id>', methods=['GET'])
+def post_details(id):
+    prescription = Prescriptions.query.get(id)
+    return prescription_schema.jsonify(prescription)
+
+
+@app.route('/add', methods=['POST'])
+def add_prescription():
+    name = request.json['name']
+    dosage = request.json['dosage']
+
+    prescriptions = Prescriptions(name, dosage)
+    db.session.add(prescriptions)
+    db.session.commit()
+    return prescription_schema.jsonify(prescriptions)
+
+#this updates a record from  the database
+@app.route('/update/<id>', methods=['GET', 'PUT'])
+def update_prescription(id):
+    prescription = Prescriptions.query.get(id)
+
+    name = request.json['name']
+    dosage = request.json['dosage']
+
+    prescription.name = name
+    prescription.dosage = dosage
+    db.session.commit()
+     
+    return prescription_schema.jsonify(prescription)
+
+
+
+#this deletes a record from the database
+@app.route('/delete/<id>', methods=['DELETE'])
+def prescription_deleted(id):
+    prescription = Prescriptions.query.get(id)
+    db.session.delete(prescription)
+    db.session.commit()
+
+    return prescription_schema.jsonify(prescription)
+
+
+
+
+#set up the main index view
+@app.route("/")
+def index():
+    return render_template('index.html')
+
+#configure the login manager so it knows how to identify a user
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 
 #create a User class for out database that stores a password
 class User(UserMixin, db.Model):
@@ -85,86 +209,6 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Username already in use.')
 
 
-@app.route('/time')
-def get_current_time():
-    currentTime = datetime.datetime.now()
-    return {'time': currentTime}
-
-#this is a model of the database columns
-class Prescriptions(db.Model):
-     id = db.Column(db.Integer, primary_key=True)
-     name = db.Column(db.String(100))
-     dosage = db.Column(db.String(100))
-     
-     def __init__(self, name, dosage):
-         self.name = name
-         self.dosage = dosage
-
-
-class Prescription_Schema(ma.Schema):
-    class Meta:
-        fields = ('id', 'name', 'dosage')
-prescription_schema = Prescription_Schema()
-prescriptions_schema = Prescription_Schema(many=True)
-
-#configure the login manager so it knows how to identify a user
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-#set up the main index view
-@app.route("/")
-def index():
-    return render_template('index.html')
-
-@app.route('/get', methods=['GET'])
-def get_prescription():
-    all_prescriptions = Prescriptions.query.all()
-    results = prescriptions_schema.dump(all_prescriptions)
-    return jsonify(results)
-
-
-@app.route('/get/<id>', methods=['GET'])
-def post_details(id):
-    prescription = Prescriptions.query.get(id)
-    return prescription_schema.jsonify(prescription)
-
-
-@app.route('/add', methods=['POST'])
-def add_prescription():
-    name = request.json['name']
-    dosage = request.json['dosage']
-
-    prescriptions = Prescriptions(name, dosage)
-    db.session.add(prescriptions)
-    db.session.commit()
-    return prescription_schema.jsonify(prescriptions)
-
-#this updates a record from  the database
-@app.route('/update/<id>', methods=['GET', 'PUT'])
-def update_prescription(id):
-    prescription = Prescriptions.query.get(id)
-
-    name = request.json['name']
-    dosage = request.json['dosage']
-
-    prescription.name = name
-    prescription.dosage = dosage
-    db.session.commit()
-     
-    return prescription_schema.jsonify(prescription)
-
-
-
-#this deletes a record from the database
-@app.route('/delete/<id>', methods=['DELETE'])
-def prescription_deleted(id):
-    prescription = Prescriptions.query.get(id)
-    db.session.delete(prescription)
-    db.session.commit()
-
-    return prescription_schema.jsonify(prescription)
-
 #set up the login view and handle login logic
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -204,6 +248,9 @@ def register():
         return redirect(url_for('login'))
         flash('You can now login')
     return render_template('register.html', form=form)
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
