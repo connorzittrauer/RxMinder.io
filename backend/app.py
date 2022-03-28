@@ -92,7 +92,7 @@ def get_times():
 
 #query by the specific prescription 
 @app.route('/times/<rxid>', methods=['GET'])
-def get_specific_prescription_time(rxid):        
+def get_specific_prescription_time(rxid):       
     time = Times.query.get(rxid)
     return time_schema.jsonify(time)
 
