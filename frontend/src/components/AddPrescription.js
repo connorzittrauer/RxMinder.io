@@ -10,7 +10,7 @@ function AddPrescription(props) {
   //these name and dosage variables are retrieved from the input form below and passed to the API service
   const[name, setName] = useState('')
   const[dosage, setDosage] = useState('')
-
+  const[times, setTime] = useState('')
 
   const AddPrescription = () => {
       APIService.CallFetch('add', 'POST', { name, dosage })
@@ -26,6 +26,7 @@ function AddPrescription(props) {
         <form>
           <input style={{marginRight: '15px'}} onChange={event => setName(event.target.value)} placeholder='prescription name'/>
           <input onChange={event => setDosage(event.target.value)} placeholder='dosage'/>
+          <input style={{marginRight: '15px'}} onChange={event => setTime(event.target.value)} placeholder='when do you take this medication?'/>
           <button style={{marginTop: '15px'}} onClick={AddPrescription} type="submit">
             Submit
           </button>

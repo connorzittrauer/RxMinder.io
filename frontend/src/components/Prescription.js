@@ -7,12 +7,17 @@ function Prescription(props) {
   //states to change name, dose, and view
   const [name, setName] = useState(props.name);
   const [dose, setDose] = useState(props.dosage);
+
+
   const [uView, setUView] = useState(false);
+
+
   //using call fetch to edit a prescription
   const editPrescription = () => {
     let body = {
       name: name, 
-      dosage: dose
+      dosage: dose,
+
     }
     APIService.CallFetch(`update/${props.id}`, 'PUT', body)
         .then(() => props.refresh())

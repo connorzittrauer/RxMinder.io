@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import APIService from "../components/APIService";
 import Prescription from "../components/Prescription";
-import AddPrescription from "../components/AddPerscription";
+import AddPrescription from "../components/AddPrescription";
 
 const Medications = () => {
     /* prescriptions are saved in an array */
     const [prescriptions, setPrescriptions] = useState([])
+
+
     //making a call to the APIservice
     const getPrescriptions = () => {
         APIService.CallFetch('get', 'GET')
         .then(resp => setPrescriptions(resp.reverse())) // most recent first
         .catch(error=> console.log(error))
     }
+
+    
     //when component mounts call getPrescriptions
     useEffect(() => {
         getPrescriptions()
