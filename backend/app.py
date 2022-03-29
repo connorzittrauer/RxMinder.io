@@ -39,7 +39,7 @@ login_manager.init_app(app)
 
 
 #this provides current time endpoint for the splash page on the front
-@app.route('/time')
+@app.route('/current_time')
 def get_current_time():
     currentTime = datetime.datetime.now()
     return {'time': currentTime}
@@ -75,7 +75,7 @@ class Times(db.Model):
         self.rxid = rxid
         self.time = time
         self.meridiem = meridiem
-
+      
 
 class Times_Schema(ma.Schema):
     class Meta:
@@ -97,9 +97,7 @@ def get_times():
 @app.route('/times/<rxid>', methods=['GET'])
 def get_specific_prescription_time(rxid):       
     prescription = Prescriptions.query.get(rxid)
-
     time_list = []
-
     for t in prescription.times:
         time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
     return jsonify(time_list)

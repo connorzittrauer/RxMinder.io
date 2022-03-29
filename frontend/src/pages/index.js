@@ -7,7 +7,7 @@ const Home = () => {
   const [currentTime, setCurrentTime] = useState(0);
 
   const getTime = () => {
-    APIService.CallFetch('/time', 'GET')
+    APIService.CallFetch('/current_time', 'GET')
     .then(data => {
       setCurrentTime(data.time)
     })
