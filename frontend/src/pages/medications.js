@@ -18,7 +18,7 @@ const Medications = () => {
 
 
     const getTimes = () => {
-        APIService.CallFetch(`times`, 'GET')
+        APIService.CallFetch(`times/1`, 'GET')
         .then(resp => setTimes(resp)) 
         .then(console.log(times))
         .catch(error => console.log(error))
@@ -32,13 +32,12 @@ const Medications = () => {
     }, [])
 
 
-    // console.log(prescriptions[0].dosage)
+
     //build prescription components out of state array
     const renderPrescriptions = () => {
         return (
             prescriptions.map((p, index) =>{
-                return <Prescription key={`prescription${index}`}id={p.id} index={index} name={p.name} dosage={p.dosage} refresh={getPrescriptions} />    
-     
+                return <Prescription key={`prescription${index}`}id={p.id} index={index} name={p.name} dosage={p.dosage} time={p.times} refresh={getPrescriptions} />    
             })
 
         )

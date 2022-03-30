@@ -13,7 +13,7 @@ function AddPrescription(props) {
   const[times, setTime] = useState('')
 
   const AddPrescription = () => {
-      APIService.CallFetch('add', 'POST', { name, dosage })
+      APIService.CallFetch('add', 'POST', { name, dosage, times})
       .then(() => props.refresh())
       .then(console.log(name, dosage))
       .catch(error=> console.log(error))
