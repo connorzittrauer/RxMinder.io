@@ -37,7 +37,7 @@ const Medications = () => {
     const renderPrescriptions = () => {
         return (
             prescriptions.map((p, index) =>{
-                return <Prescription key={`prescription${index}`}id={p.id} index={index} name={p.name} dosage={p.dosage} time={p.times} refresh={getPrescriptions} />    
+                return <Prescription key={`prescription${index}`} id={p.id} index={index} name={p.name} dosage={p.dosage} refresh={getPrescriptions} />    
             })
 
         )
