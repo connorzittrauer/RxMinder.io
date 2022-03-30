@@ -7,8 +7,7 @@ function Prescription(props) {
   //states to change name, dose, and view
   const [name, setName] = useState(props.name);
   const [dose, setDose] = useState(props.dosage);
-
-
+  const [time, setTime] = useState(props.time)
   const [uView, setUView] = useState(false);
 
 
@@ -17,13 +16,16 @@ function Prescription(props) {
     let body = {
       name: name, 
       dosage: dose,
+      frequency: time, 
 
     }
     APIService.CallFetch(`update/${props.id}`, 'PUT', body)
         .then(() => props.refresh())
         .catch(error=> console.log(error))
   }
-  
+
+    
+
   //update changes the view and edits the prescription if it is in update view --uView
   const update = () => {
     if (uView) {
@@ -49,10 +51,12 @@ function Prescription(props) {
         <br />
         <label>Dosage:</label>
         <input className="doseField" value={dose} onChange={(e) => setDose(e.target.value)} />
+        <label>frequency:</label>
+        <input className="timeField" value={time} onChange={(e) => setTime(e.target.value)} />
         <PrescriptionButtons update={update} delete={deleteP} updateOnly={uView} />
       </>):
       (<>
-        <p className="cardText">{props.name}: {props.dosage}</p>
+        <p className="cardText">{props.name}: {props.dosage} : {props.time}</p>
         <PrescriptionButtons update={update} delete={deleteP} updateOnly={uView} />
       </>)}
     </div>

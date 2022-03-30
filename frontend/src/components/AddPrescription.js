@@ -18,6 +18,7 @@ function AddPrescription(props) {
       .then(console.log(name, dosage))
       .catch(error=> console.log(error))
   }
+  
   return (
     <div className='formDiv'>
       <button style={{marginRight: '15px'}} onClick={viewData}>Add New Prescription</button>
