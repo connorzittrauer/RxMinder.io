@@ -16,7 +16,8 @@ function Prescription(props) {
     let body = {
       name: name, 
       dosage: dose,
-      frequency: time, 
+      frequency: time,
+
 
     }
     APIService.CallFetch(`update/${props.id}`, 'PUT', body)
@@ -51,7 +52,7 @@ function Prescription(props) {
         <br />
         <label>Dosage:</label>
         <input className="doseField" value={dose} onChange={(e) => setDose(e.target.value)} />
-        <label>frequency:</label>
+        <label>Time:</label>
         <input className="timeField" value={time} onChange={(e) => setTime(e.target.value)} />
         <PrescriptionButtons update={update} delete={deleteP} updateOnly={uView} />
       </>):

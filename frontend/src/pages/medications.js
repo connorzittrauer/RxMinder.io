@@ -20,7 +20,7 @@ const Medications = () => {
     const getTimes = () => {
         APIService.CallFetch(`times`, 'GET')
         .then(resp => setTimes(resp)) 
-        .then(console.log(times[0].time))
+        .then(console.log(times))
         .catch(error => console.log(error))
     }
 
@@ -29,8 +29,6 @@ const Medications = () => {
     useEffect(() => {
         getPrescriptions()
         getTimes()
-       
-        // getPrescriptionIDs()
     }, [])
 
 
@@ -39,7 +37,7 @@ const Medications = () => {
     const renderPrescriptions = () => {
         return (
             prescriptions.map((p, index) =>{
-                return <Prescription key={`prescription${index}`}id={p.id} index={index} name={p.name} dosage={p.dosage} frequency={times[0].time} refresh={getPrescriptions} />    
+                return <Prescription key={`prescription${index}`}id={p.id} index={index} name={p.name} dosage={p.dosage} refresh={getPrescriptions} />    
      
             })
 
