@@ -104,6 +104,38 @@ def get_specific_prescription_time(rxid):
     return jsonify(time_list)
 
 
+
+
+# #this updates a record from  the database
+# @app.route('/update/<id>', methods=['GET', 'PUT'])
+# def update_prescription(id):
+#     prescription = Prescriptions.query.get(id)
+
+#     name = request.json['name']
+#     dosage = request.json['dosage']
+
+#     prescription.name = name
+#     prescription.dosage = dosage
+#     db.session.commit()
+     
+#     return prescription_schema.jsonify(prescription)
+
+
+@app.route('/update-time/<id>', methods=['GET', 'PUT'])
+def update_time(id):
+    time_slots = Times.query.get(id)
+
+    time = request.json['time']
+    meridiem = request.json['meridiem']
+
+    time_slots.time = time
+    time_slots.meridiem = meridiem
+    db.session.commit()
+
+    return time_schema.jsonify(time_slots)
+
+
+
 @app.route('/get', methods=['GET'])
 def get_prescription():
     all_prescriptions = Prescriptions.query.all()
@@ -145,6 +177,8 @@ def update_prescription(id):
     db.session.commit()
      
     return prescription_schema.jsonify(prescription)
+
+
 
 
 

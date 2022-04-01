@@ -4,10 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { transitions, positions, Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
 
 ReactDOM.render(
-  <React.StrictMode>
+
+<React.StrictMode>
+  <AlertProvider template={AlertTemplate}>
     <App />
+  </AlertProvider>  
   </React.StrictMode>,
   document.getElementById('root')
 );
