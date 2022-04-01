@@ -152,6 +152,10 @@ def update_prescription(id):
 @app.route('/delete/<id>', methods=['DELETE'])
 def prescription_deleted(id):
     prescription = Prescriptions.query.get(id)
+
+    #deletes the corresponding time information
+    Times.query.filter_by(rxid=id).delete()
+
     db.session.delete(prescription)
     db.session.commit()
 
