@@ -121,9 +121,14 @@ def post_details(id):
 def add_prescription():
     name = request.json['name']
     dosage = request.json['dosage']
-
+    time = request.json['time']
+    meridiem = request.json['meridiem']
     prescriptions = Prescriptions(name, dosage)
     db.session.add(prescriptions)
+    db.session.commit()
+    db.session.refresh(prescriptions)
+    time = Times(prescriptions.id, time, meridiem)
+    db.session.add(time)
     db.session.commit()
     return prescription_schema.jsonify(prescriptions)
 

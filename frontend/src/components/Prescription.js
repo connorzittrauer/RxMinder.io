@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import "./styles.css";
 import PrescriptionButtons from './PrescriptionButtons';
 import APIService from './APIService';
+import TimeSelector from './TimeSelector';
 
 function Prescription(props) {
   //states to change name, dose, and view
@@ -9,13 +10,12 @@ function Prescription(props) {
   const [dose, setDose] = useState(props.dosage);
   const [time, setTime] = useState([])
   const [uView, setUView] = useState(false);
-
+  console.log(time)
   //calls useEffect() to get the time based on the id this happens anytime props.id changes
   useEffect(() => {
     APIService.CallFetch(`times/${props.id}`, 'GET')
     .then((r) => setTime(r))
   }, [props.id])
-
 
   //using call fetch to edit a prescription
   const editPrescription = () => {
@@ -57,6 +57,15 @@ function Prescription(props) {
     })
     return doseTimes
   }
+
+  const renderTimes = () => {
+    let timeComponents = time.map((t,i) => {
+      let timeR = t.time.split(':')
+      return <TimeSelector hour={timeR[0]} min={timeR[1]} meridiem={t.meridiem} key={`selector${i}`} setTime={() => {}} setMer={() => {}} />
+    })
+    return timeComponents
+  }
+
   //this builds the ui
   return (
     <div className="pCard">
@@ -67,8 +76,9 @@ function Prescription(props) {
         <br />
         <label>Dosage:</label>
         <input className="doseField" value={dose} onChange={(e) => setDose(e.target.value)} />
-        <label>Time:</label>
-        <input className="timeField" value={time} onChange={(e) => setTime(e.target.value)} />
+        {/* <label>Time:</label> */}
+        {/* <input className="timeField" value={formatTimes()} onChange={(e) => setTime(e.target.value)} /> */}
+        {renderTimes()}
         <PrescriptionButtons update={update} delete={deleteP} updateOnly={uView} />
       </>):
       (<>
