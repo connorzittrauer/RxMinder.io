@@ -2,6 +2,7 @@ from dataclasses import dataclass, fields
 import json
 import os
 import time, datetime
+from datetime import datetime
 from unicodedata import name
 from unittest import result
 from flask import Flask, request, jsonify ,render_template, redirect, request, session, url_for, flash
@@ -38,11 +39,14 @@ login_manager.login_view = 'login'
 login_manager.init_app(app)
 
 
-
+# print(now.strftime("%D:%H:%M"))
 #this provides current time endpoint for the splash page on the front
 @app.route('/current_time')
 def get_current_time():
-    currentTime = datetime.datetime.now()
+
+  
+    now = datetime.now()
+    currentTime = now.strftime("%I:%M %P")
     return {'time': currentTime}
 
 
@@ -104,21 +108,6 @@ def get_specific_prescription_time(rxid):
     return jsonify(time_list)
 
 
-
-
-# #this updates a record from  the database
-# @app.route('/update/<id>', methods=['GET', 'PUT'])
-# def update_prescription(id):
-#     prescription = Prescriptions.query.get(id)
-
-#     name = request.json['name']
-#     dosage = request.json['dosage']
-
-#     prescription.name = name
-#     prescription.dosage = dosage
-#     db.session.commit()
-     
-#     return prescription_schema.jsonify(prescription)
 
 
 @app.route('/update-time/<id>', methods=['GET', 'PUT'])
