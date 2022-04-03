@@ -15,6 +15,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 
+
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
@@ -264,7 +265,6 @@ def register():
         return redirect(url_for('login'))
         flash('You can now login')
     return render_template('register.html', form=form)
-
 
 
 
