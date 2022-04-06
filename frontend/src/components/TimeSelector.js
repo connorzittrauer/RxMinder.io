@@ -1,11 +1,15 @@
 import React, { useState, useEffect} from 'react'
+import APIService from './APIService'
 
 const TimeSelector = (props) => {
     
     const[hour, setHour] = useState(props.hour)
     const[min, setMin] = useState(props.min)
     const[meridiem, setMer] = useState(props.meridiem)
-    console.log(props)
+
+
+
+
     useEffect(() => {
         props.setTime(hour + ":" + min)
         props.setMer(meridiem)

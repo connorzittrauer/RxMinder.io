@@ -39,12 +39,9 @@ login_manager.login_view = 'login'
 login_manager.init_app(app)
 
 
-# print(now.strftime("%D:%H:%M"))
 #this provides current time endpoint for the splash page on the front
 @app.route('/current_time')
 def get_current_time():
-
-  
     now = datetime.now()
     currentTime = now.strftime("%I:%M %P")
     return {'time': currentTime}

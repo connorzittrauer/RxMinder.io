@@ -10,7 +10,8 @@ function Prescription(props) {
   const [dose, setDose] = useState(props.dosage);
   const [time, setTime] = useState([])
   const [uView, setUView] = useState(false);
-  console.log(time)
+
+
   //calls useEffect() to get the time based on the id this happens anytime props.id changes
   useEffect(() => {
     APIService.CallFetch(`times/${props.id}`, 'GET')
@@ -23,13 +24,23 @@ function Prescription(props) {
       name: name, 
       dosage: dose,
       frequency: time,
+
     }
     APIService.CallFetch(`update/${props.id}`, 'PUT', body)
         .then(() => props.refresh())
         .catch(error=> console.log(error))
+
   }
 
-    
+
+  const updateTime = () => {
+    APIService.CallFetch(`update-time/${props.id}`, 'PUT')
+    .then(() => props.refresh())
+    .then(error => console.log(error))    
+  }
+
+ 
+        
 
   //update changes the view and edits the prescription if it is in update view --uView
   const update = () => {
