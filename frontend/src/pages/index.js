@@ -7,17 +7,8 @@ const Home = () => {
   const [currentTime, setCurrentTime] = useState(0);
 
   const schedule = require('node-schedule');
+  let firstLoad = true
 
-  const job = schedule.scheduleJob('* * * * *', function(){
-
-    console.log('A console log');
-    getTime();
-  });
-
-
-
- 
- 
     const getTime = () => {
       APIService.CallFetch('/current_time', 'GET')
       .then(data => {
@@ -26,14 +17,21 @@ const Home = () => {
       .catch(error=> console.log(error))
   }
     useEffect(() => {
-      getTime()
+      if (firstLoad) {
+        getTime()
+        firstLoad = false;
+      }
+      const job = schedule.scheduleJob('*/1 * * * *', function(){
+        getTime();
+        
+      });
     }, [])
     
   return (
     <div className='page'>
       <h1>Welcome to your Medication Portal</h1>
       <br />
-      <h4>Current time: {currentTime}z</h4>
+      <h4>Current time: {currentTime}</h4>
     </div>
   );
 };

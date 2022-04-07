@@ -21,7 +21,7 @@ cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 add_config  = {
   "origins": ["http://localhost:3000"],
-  "methods": ["GET", "POST", "PATCH", "DELETE"],
+  "methods": ["GET", "POST", "PATCH", "DELETE", "PUT"],
   "allow_headers": ["Authorization", "Content-Type"]
 }
 
@@ -40,7 +40,7 @@ login_manager.init_app(app)
 
 
 #this provides current time endpoint for the splash page on the front
-@app.route('/current_time')
+@app.route('/current_time', methods=['GET'])
 def get_current_time():
     now = datetime.now()
     currentTime = now.strftime("%I:%M %P")
