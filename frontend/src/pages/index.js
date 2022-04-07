@@ -6,24 +6,34 @@ const Home = () => {
 
   const [currentTime, setCurrentTime] = useState(0);
 
-  const getTime = () => {
-    APIService.CallFetch('/current_time', 'GET')
-    .then(data => {
-      setCurrentTime(data.time)
-    })
-    .catch(error=> console.log(error))
-}
+  const schedule = require('node-schedule');
 
-  useEffect(() => {
-    getTime()
-  }, [])
+  const job = schedule.scheduleJob('* * * * *', function(){
+
+    console.log('A console log');
+    getTime();
+  });
 
 
+
+ 
+ 
+    const getTime = () => {
+      APIService.CallFetch('/current_time', 'GET')
+      .then(data => {
+        setCurrentTime(data.time)
+      })
+      .catch(error=> console.log(error))
+  }
+    useEffect(() => {
+      getTime()
+    }, [])
+    
   return (
     <div className='page'>
       <h1>Welcome to your Medication Portal</h1>
       <br />
-      <h4>Current time: {currentTime}</h4>
+      <h4>Current time: {currentTime}z</h4>
     </div>
   );
 };
