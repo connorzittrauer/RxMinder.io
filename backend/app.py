@@ -44,6 +44,10 @@ login_manager.init_app(app)
 def get_current_time():
     now = datetime.now()
     currentTime = now.strftime("%I:%M %P")
+
+    #removes unnecessary leading 0s in time output (e.g '07:15 pm')
+    if currentTime[0] == '0':
+        currentTime = currentTime[1:]
     return {'time': currentTime}
 
 
