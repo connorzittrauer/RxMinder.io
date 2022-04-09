@@ -7,7 +7,6 @@ const Home = () => {
 
   const [currentTime, setCurrentTime] = useState(0);
 
-
   const schedule = require('node-schedule');
   let firstLoad = true
 
@@ -39,5 +38,5 @@ const Home = () => {
     </div>
   );
 };
-  
+
 export default Home;

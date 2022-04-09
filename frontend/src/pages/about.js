@@ -1,18 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
+import APIService from "../components/APIService";
 import TimeMonitor from '../components/TimeMonitor';
-const About = () => {
-  
-  const MINUTE_MS = 60000;
 
+const About = (props) => {
+
+  const [rxTimes, getPrescriptionTimes] = useState([])
+  var timeSlots = []
+  const getRxTimes = () => {
+    APIService.CallFetch('/times', 'GET')
+    .then(data => {
+      getPrescriptionTimes(data)
+    })
+
+    .catch(error=> console.log(error))
+  }
+
+  const buildArray = () => {
+    for (let i = 0; i < rxTimes.length; i++){
+      console.log(rxTimes[i].time)
+     
+    }
+
+  }
+
+  console.log(timeSlots.length)
+ 
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('Logs every minute');
-    }, MINUTE_MS);
+    getRxTimes()
+    buildArray()
 
-    return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-  }, [])
+  }, [])  
+  
 
+
+ 
   return (
   
   

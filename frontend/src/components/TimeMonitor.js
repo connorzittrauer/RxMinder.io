@@ -7,8 +7,13 @@ const TimeMonitor = () => {
   const alert = useAlert()
   const [currentTime, getCurrentTime] = useState(0);
   //fetch all of the times, whenever one is equal to the current time in the database, trigger an alert, display the medication to be taken
+  
+
 
   //make a call to the time input every minute
+  useEffect (() => {
+    // alert.show('Oh look, an alert!')
+  }, [])
 
   return (
     <button
