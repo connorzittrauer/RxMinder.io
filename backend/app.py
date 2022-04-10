@@ -1,15 +1,15 @@
 from dataclasses import dataclass, fields
 import json
-import os
-import time, datetime
-from unicodedata import name
-from unittest import result
 from flask import Flask, request, jsonify ,render_template, redirect, request, session, url_for, flash
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow 
 from flask_cors import CORS, cross_origin
 from flask_wtf import FlaskForm
+import os
+import time, datetime
+from unicodedata import name
+from unittest import result
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
@@ -37,14 +37,6 @@ ma = Marshmallow(app)
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
-
-
-
-#this provides current time endpoint for the splash page on the front
-@app.route('/current_time')
-def get_current_time():
-    currentTime = datetime.datetime.now()
-    return {'time': currentTime}
 
 
 #this is a model of the database columns
@@ -87,13 +79,80 @@ times_schema = Times_Schema(many=True)
 
 
 
+#create a User class for out database that stores a password
+class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key = True)
+    email = db.Column(db.String(64), unique=True, index=True)
+    username = db.Column(db.String(64), unique=True, index=True)
+    password_hash = db.Column(db.String(128))
+
+    @property
+    def password(self):
+        raise AttributeError('No soup for you!/nPasswords are unreadable.')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+## Backend user Flask forms
+#Define a Login Form to allow users to login
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Length(1, 64),
+                                             Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Keep me logged in')
+    submit = SubmitField('Log In')
+
+#Define a Logout Form to allow users to logout
+class RegistrationForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Length(1, 64),
+                                             Email()])
+    username = StringField('Username', validators=[
+        DataRequired(), Length(1, 64),
+        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+               'Usernames must have only letters, numbers, dots or '
+               'underscores')])
+    password = PasswordField('Password', validators=[
+        DataRequired(), EqualTo('password2', message='Passwords must match.')])
+    password2 = PasswordField('Confirm password', validators=[DataRequired()])
+    submit = SubmitField('Register')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data.lower()).first():
+            raise ValidationError('Email already registered.')
+
+    def validate_username(self, field):
+        if User.query.filter_by(username=field.data).first():
+            raise ValidationError('Username already in use.')
+
+## End Backend User Flask forms
+
+#configure the login manager so it knows how to identify a user
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+#set up the main index view
+@app.route("/")
+def index():
+    return render_template('index.html')
+
+#this provides current time endpoint for the splash page on the front
+@app.route('/current_time')
+def get_current_time():
+    currentTime = datetime.datetime.now()
+    return {'time': currentTime}
+
 #query all of the times in the times tables
 @app.route('/times', methods=['GET'])
 def get_times():
     all_times = Times.query.all()
     results = times_schema.dump(all_times)
     return jsonify(results)
-
 
 #query by the specific prescription 
 @app.route('/times/<rxid>', methods=['GET'])
@@ -133,23 +192,7 @@ def add_prescription():
     db.session.commit()
     return prescription_schema.jsonify(prescriptions)
 
-#this updates a record from  the database
-@app.route('/update/<id>', methods=['GET', 'PUT'])
-def update_prescription(id):
-    prescription = Prescriptions.query.get(id)
-
-    name = request.json['name']
-    dosage = request.json['dosage']
-
-    prescription.name = name
-    prescription.dosage = dosage
-    db.session.commit()
-     
-    return prescription_schema.jsonify(prescription)
-
-
-
-#this deletes a record from the database
+#this deletes a perscription from the database
 @app.route('/delete/<id>', methods=['DELETE'])
 def prescription_deleted(id):
     prescription = Prescriptions.query.get(id)
@@ -161,70 +204,6 @@ def prescription_deleted(id):
     db.session.commit()
 
     return prescription_schema.jsonify(prescription)
-
-
-
-
-#set up the main index view
-@app.route("/")
-def index():
-    return render_template('index.html')
-
-#configure the login manager so it knows how to identify a user
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
-#create a User class for out database that stores a password
-class User(UserMixin, db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(64), unique=True, index=True)
-    username = db.Column(db.String(64), unique=True, index=True)
-    password_hash = db.Column(db.String(128))
-
-    @property
-    def password(self):
-        raise AttributeError('No soup for you!/nPasswords are unreadable.')
-
-    @password.setter
-    def password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def verify_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-#Define a Login Form to allow users to login
-class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Length(1, 64),
-                                             Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Keep me logged in')
-    submit = SubmitField('Log In')
-
-#Define a Logout Form to allow users to logout
-class RegistrationForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Length(1, 64),
-                                             Email()])
-    username = StringField('Username', validators=[
-        DataRequired(), Length(1, 64),
-        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
-               'Usernames must have only letters, numbers, dots or '
-               'underscores')])
-    password = PasswordField('Password', validators=[
-        DataRequired(), EqualTo('password2', message='Passwords must match.')])
-    password2 = PasswordField('Confirm password', validators=[DataRequired()])
-    submit = SubmitField('Register')
-
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data.lower()).first():
-            raise ValidationError('Email already registered.')
-
-    def validate_username(self, field):
-        if User.query.filter_by(username=field.data).first():
-            raise ValidationError('Username already in use.')
-
 
 #set up the login view and handle login logic
 @app.route('/login', methods=['GET', 'POST'])
@@ -249,13 +228,11 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
-#set up the registration view and registration logic
+#set up the user registration view and user registration logic
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
-    print("before validation")
     if form.validate_on_submit():
-        print("after validation")
         user = User(email=form.email.data.lower(),
                     username=form.username.data,
                     password=form.password.data)
@@ -265,6 +242,20 @@ def register():
         return redirect(url_for('login'))
         flash('You can now login')
     return render_template('register.html', form=form)
+
+#this updates a perscription from the database
+@app.route('/update/<id>', methods=['GET', 'PUT'])
+def update_prescription(id):
+    prescription = Prescriptions.query.get(id)
+
+    name = request.json['name']
+    dosage = request.json['dosage']
+
+    prescription.name = name
+    prescription.dosage = dosage
+    db.session.commit()
+     
+    return prescription_schema.jsonify(prescription)
 
 
 
