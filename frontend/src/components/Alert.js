@@ -2,6 +2,7 @@ import {React, useState, useEffect} from "react";
 import { useAlert } from 'react-alert'
 import APIService from "./APIService";
 
+
 const TimeMonitor = () => {
 
   const alert = useAlert()
@@ -16,6 +17,7 @@ const TimeMonitor = () => {
     <button
       onClick={() => {
         alert.show('Oh look, an alert!')
+       
       }}
     >
       Show Alert
