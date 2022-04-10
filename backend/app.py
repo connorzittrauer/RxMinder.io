@@ -45,7 +45,7 @@ class Prescriptions(db.Model):
      name = db.Column(db.String(100))
      dosage = db.Column(db.String(100))
      
-     times = db.relationship('Times', backref='prescription', lazy=True)
+     times = db.relationship('Times', backref='prescription')
 
      def __init__(self, name, dosage):
          self.name = name
