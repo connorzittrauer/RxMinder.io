@@ -21,7 +21,7 @@ cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 add_config  = {
   "origins": ["http://localhost:3000"],
-  "methods": ["GET", "POST", "PATCH", "DELETE"],
+  "methods": ["GET", "POST", "PATCH", "DELETE", "PUT"],
   "allow_headers": ["Authorization", "Content-Type"]
 }
 
@@ -122,16 +122,30 @@ def post_details(id):
 def add_prescription():
     name = request.json['name']
     dosage = request.json['dosage']
-    time = request.json['time']
-    meridiem = request.json['meridiem']
+    times = request.json['times'] #now sending a list of times/meridiems below
+    meridiems = request.json['meridiems']
     prescriptions = Prescriptions(name, dosage)
     db.session.add(prescriptions)
     db.session.commit()
     db.session.refresh(prescriptions)
-    time = Times(prescriptions.id, time, meridiem)
-    db.session.add(time)
-    db.session.commit()
+    i = 0
+    for time in times:
+        time = Times(prescriptions.id, time, meridiems[i])
+        db.session.add(time)
+        db.session.commit()
+        db.session.refresh(time)
+        i = i + 1
     return prescription_schema.jsonify(prescriptions)
+
+@app.route('/addTime', methods=['POST'])
+def add_time():
+    time = request.json['time']
+    meridiem = request.json['meridiem']
+    rxid = request.json['rxid']
+    t = Times(rxid, time, meridiem)
+    db.session.add(t)
+    db.session.commit()
+    return {"message":"time has been added"}
 
 #this updates a record from  the database
 @app.route('/update/<id>', methods=['GET', 'PUT'])
@@ -162,6 +176,23 @@ def prescription_deleted(id):
 
     return prescription_schema.jsonify(prescription)
 
+@app.route('/time/<id>', methods=['DELETE'])
+def time_delete(id):
+    time = Times.query.get(id)
+    db.session.delete(time)
+    db.session.commit()
+
+    return {"message":"the time was deleted"}
+
+@app.route('/updateTime/<id>', methods=['PUT'])
+def update_time(id):
+    newTime = request.json['time']
+    newMer = request.json['meridiem']
+    time = Times.query.get(id)
+    time.time = newTime
+    time.meridiem = newMer
+    db.session.commit()
+    return {"message":"the time was updated"}
 
 
 

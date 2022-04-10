@@ -10,7 +10,7 @@ const Medications = () => {
     //making a call to the APIservice
     const getPrescriptions = () => {
         APIService.CallFetch('get', 'GET')
-        .then(resp => setPrescriptions(resp)) // most recent first
+        .then(resp => setPrescriptions(resp.reverse())) // saves most recent prescription first
         .catch(error=> console.log(error))
     }
    
@@ -18,8 +18,6 @@ const Medications = () => {
     useEffect(() => {
         getPrescriptions()
     }, [])
-
-
 
     //build prescription components out of state array
     const renderPrescriptions = () => {
