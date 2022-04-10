@@ -1,29 +1,32 @@
-import {React, useState, useEffect} from "react";
-import { useAlert } from 'react-alert'
+import React, { useState, useEffect } from "react";
 import APIService from "./APIService";
 
 const TimeMonitor = () => {
+ const [currentTime, setCurrentTime] = useState(0);
 
-  const alert = useAlert()
-  const [currentTime, getCurrentTime] = useState(0);
-  //fetch all of the times, whenever one is equal to the current time in the database, trigger an alert, display the medication to be taken
-  
+  const schedule = require('node-schedule');
+  let firstLoad = true
+
+    const getTime = () => {
+      APIService.CallFetch('/current_time', 'GET')
+      .then(data => {
+        setCurrentTime(data.time)
+      })
+      .catch(error=> console.log(error))
+  }
+  //I know its dirty but it works
+    useEffect(() => {
+      if (firstLoad) {
+        getTime()
+        firstLoad = false;
+      }
+      const job = schedule.scheduleJob('*/1 * * * *', function(){
+        getTime();
+      });
+    }, [])
 
 
-  //make a call to the time input every minute
-  useEffect (() => {
-    // alert.show('Oh look, an alert!')
-  }, [])
-
-  return (
-    <button
-      onClick={() => {
-        alert.show('Oh look, an alert!')
-      }}
-    >
-      Show Alert
-    </button>
-  )
+    return currentTime;
 }
-  
-export default TimeMonitor;
+
+export default TimeMonitor
