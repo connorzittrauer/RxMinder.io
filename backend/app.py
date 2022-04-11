@@ -21,7 +21,7 @@ cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 add_config  = {
   "origins": ["http://localhost:3000"],
-  "methods": ["GET", "POST", "PATCH", "DELETE"],
+  "methods": ["GET", "POST", "PATCH", "DELETE", "PUT"],
   "allow_headers": ["Authorization", "Content-Type"]
 }
 
@@ -45,7 +45,7 @@ class Prescriptions(db.Model):
      name = db.Column(db.String(100))
      dosage = db.Column(db.String(100))
      
-     times = db.relationship('Times', backref='prescription')
+     times = db.relationship('Times', backref='prescription', lazy=True)
 
      def __init__(self, name, dosage):
          self.name = name
@@ -147,50 +147,34 @@ def get_current_time():
     currentTime = datetime.datetime.now()
     return {'time': currentTime}
 
-#query all of the times in the times tables
-@app.route('/times', methods=['GET'])
-def get_times():
-    all_times = Times.query.all()
-    results = times_schema.dump(all_times)
-    return jsonify(results)
-
-#query by the specific prescription 
-@app.route('/times/<rxid>', methods=['GET'])
-def get_specific_prescription_time(rxid):       
-    prescription = Prescriptions.query.get(rxid)
-    time_list = []
-    for t in prescription.times:
-        time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
-    return jsonify(time_list)
-
-
-@app.route('/get', methods=['GET'])
-def get_prescription():
-    all_prescriptions = Prescriptions.query.all()
-    results = prescriptions_schema.dump(all_prescriptions)
-    return jsonify(results)
-
-
-@app.route('/get/<id>', methods=['GET'])
-def post_details(id):
-    prescription = Prescriptions.query.get(id)
-    return prescription_schema.jsonify(prescription)
-
-
-@app.route('/add', methods=['POST'])
-def add_prescription():
-    name = request.json['name']
-    dosage = request.json['dosage']
-    time = request.json['time']
-    meridiem = request.json['meridiem']
-    prescriptions = Prescriptions(name, dosage)
-    db.session.add(prescriptions)
-    db.session.commit()
-    db.session.refresh(prescriptions)
-    time = Times(prescriptions.id, time, meridiem)
-    db.session.add(time)
-    db.session.commit()
+@app.route('/add', methods=['POST'])	
+def add_prescription():	
+    name = request.json['name']	
+    dosage = request.json['dosage']	
+    times = request.json['times'] #now sending a list of times/meridiems below	
+    meridiems = request.json['meridiems']	
+    prescriptions = Prescriptions(name, dosage)	
+    db.session.add(prescriptions)	
+    db.session.commit()	
+    db.session.refresh(prescriptions)	
+    i = 0	
+    for time in times:	
+        time = Times(prescriptions.id, time, meridiems[i])	
+        db.session.add(time)	
+        db.session.commit()	
+        db.session.refresh(time)	
+        i = i + 1	
     return prescription_schema.jsonify(prescriptions)
+
+@app.route('/addTime', methods=['POST'])	
+def add_time():	
+    time = request.json['time']	
+    meridiem = request.json['meridiem']	
+    rxid = request.json['rxid']	
+    t = Times(rxid, time, meridiem)	
+    db.session.add(t)	
+    db.session.commit()	
+    return {"message":"time has been added"}
 
 #this deletes a perscription from the database
 @app.route('/delete/<id>', methods=['DELETE'])
@@ -203,6 +187,18 @@ def prescription_deleted(id):
     db.session.delete(prescription)
     db.session.commit()
 
+    return prescription_schema.jsonify(prescription)
+
+@app.route('/get', methods=['GET'])
+def get_prescription():
+    all_prescriptions = Prescriptions.query.all()
+    results = prescriptions_schema.dump(all_prescriptions)
+    return jsonify(results)
+
+
+@app.route('/get/<id>', methods=['GET'])
+def post_details(id):
+    prescription = Prescriptions.query.get(id)
     return prescription_schema.jsonify(prescription)
 
 #set up the login view and handle login logic
@@ -242,6 +238,22 @@ def register():
         return redirect(url_for('login'))
         flash('You can now login')
     return render_template('register.html', form=form)
+
+#query all of the times in the times tables
+@app.route('/times', methods=['GET'])
+def get_times():
+    all_times = Times.query.all()
+    results = times_schema.dump(all_times)
+    return jsonify(results)
+
+#query by the specific prescription 
+@app.route('/times/<rxid>', methods=['GET'])
+def get_specific_prescription_time(rxid):       
+    prescription = Prescriptions.query.get(rxid)
+    time_list = []
+    for t in prescription.times:
+        time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
+    return jsonify(time_list)
 
 #this updates a perscription from the database
 @app.route('/update/<id>', methods=['GET', 'PUT'])
