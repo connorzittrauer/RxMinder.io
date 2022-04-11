@@ -29,7 +29,6 @@ const About = () => {
     const job = schedule.scheduleJob('*/1 * * * *', function(){
       getRxTimes()
       checkTimes()
-      console.log("asdasd")
     });
   }, [])  
   
