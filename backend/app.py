@@ -1,15 +1,15 @@
 from dataclasses import dataclass, fields
 import json
+import os
+import time, datetime
+from unicodedata import name
+from unittest import result
 from flask import Flask, request, jsonify ,render_template, redirect, request, session, url_for, flash
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow 
 from flask_cors import CORS, cross_origin
 from flask_wtf import FlaskForm
-import os
-import time, datetime
-from unicodedata import name
-from unittest import result
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
@@ -37,6 +37,14 @@ ma = Marshmallow(app)
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
+
+
+
+#this provides current time endpoint for the splash page on the front
+@app.route('/current_time')
+def get_current_time():
+    currentTime = datetime.datetime.now()
+    return {'time': currentTime}
 
 
 #this is a model of the database columns
@@ -79,6 +87,126 @@ times_schema = Times_Schema(many=True)
 
 
 
+#query all of the times in the times tables
+@app.route('/times', methods=['GET'])
+def get_times():
+    all_times = Times.query.all()
+    results = times_schema.dump(all_times)
+    return jsonify(results)
+
+
+#query by the specific prescription 
+@app.route('/times/<rxid>', methods=['GET'])
+def get_specific_prescription_time(rxid):       
+    prescription = Prescriptions.query.get(rxid)
+    time_list = []
+    for t in prescription.times:
+        time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
+    return jsonify(time_list)
+
+
+@app.route('/get', methods=['GET'])
+def get_prescription():
+    all_prescriptions = Prescriptions.query.all()
+    results = prescriptions_schema.dump(all_prescriptions)
+    return jsonify(results)
+
+
+@app.route('/get/<id>', methods=['GET'])
+def post_details(id):
+    prescription = Prescriptions.query.get(id)
+    return prescription_schema.jsonify(prescription)
+
+
+@app.route('/add', methods=['POST'])
+def add_prescription():
+    name = request.json['name']
+    dosage = request.json['dosage']
+    times = request.json['times'] #now sending a list of times/meridiems below
+    meridiems = request.json['meridiems']
+    prescriptions = Prescriptions(name, dosage)
+    db.session.add(prescriptions)
+    db.session.commit()
+    db.session.refresh(prescriptions)
+    i = 0
+    for time in times:
+        time = Times(prescriptions.id, time, meridiems[i])
+        db.session.add(time)
+        db.session.commit()
+        db.session.refresh(time)
+        i = i + 1
+    return prescription_schema.jsonify(prescriptions)
+
+@app.route('/addTime', methods=['POST'])
+def add_time():
+    time = request.json['time']
+    meridiem = request.json['meridiem']
+    rxid = request.json['rxid']
+    t = Times(rxid, time, meridiem)
+    db.session.add(t)
+    db.session.commit()
+    return {"message":"time has been added"}
+
+#this updates a record from  the database
+@app.route('/update/<id>', methods=['GET', 'PUT'])
+def update_prescription(id):
+    prescription = Prescriptions.query.get(id)
+
+    name = request.json['name']
+    dosage = request.json['dosage']
+
+    prescription.name = name
+    prescription.dosage = dosage
+    db.session.commit()
+     
+    return prescription_schema.jsonify(prescription)
+
+
+
+#this deletes a record from the database
+@app.route('/delete/<id>', methods=['DELETE'])
+def prescription_deleted(id):
+    prescription = Prescriptions.query.get(id)
+
+    #deletes the corresponding time information
+    Times.query.filter_by(rxid=id).delete()
+
+    db.session.delete(prescription)
+    db.session.commit()
+
+    return prescription_schema.jsonify(prescription)
+
+@app.route('/time/<id>', methods=['DELETE'])
+def time_delete(id):
+    time = Times.query.get(id)
+    db.session.delete(time)
+    db.session.commit()
+
+    return {"message":"the time was deleted"}
+
+@app.route('/updateTime/<id>', methods=['PUT'])
+def update_time(id):
+    newTime = request.json['time']
+    newMer = request.json['meridiem']
+    time = Times.query.get(id)
+    time.time = newTime
+    time.meridiem = newMer
+    db.session.commit()
+    return {"message":"the time was updated"}
+
+
+
+#set up the main index view
+@app.route("/")
+def index():
+    return render_template('index.html')
+
+#configure the login manager so it knows how to identify a user
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
 #create a User class for out database that stores a password
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -98,7 +226,6 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-## Backend user Flask forms
 #Define a Login Form to allow users to login
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
@@ -129,77 +256,6 @@ class RegistrationForm(FlaskForm):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
 
-## End Backend User Flask forms
-
-#configure the login manager so it knows how to identify a user
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-#set up the main index view
-@app.route("/")
-def index():
-    return render_template('index.html')
-
-#this provides current time endpoint for the splash page on the front
-@app.route('/current_time')
-def get_current_time():
-    currentTime = datetime.datetime.now()
-    return {'time': currentTime}
-
-@app.route('/add', methods=['POST'])	
-def add_prescription():	
-    name = request.json['name']	
-    dosage = request.json['dosage']	
-    times = request.json['times'] #now sending a list of times/meridiems below	
-    meridiems = request.json['meridiems']	
-    prescriptions = Prescriptions(name, dosage)	
-    db.session.add(prescriptions)	
-    db.session.commit()	
-    db.session.refresh(prescriptions)	
-    i = 0	
-    for time in times:	
-        time = Times(prescriptions.id, time, meridiems[i])	
-        db.session.add(time)	
-        db.session.commit()	
-        db.session.refresh(time)	
-        i = i + 1	
-    return prescription_schema.jsonify(prescriptions)
-
-@app.route('/addTime', methods=['POST'])	
-def add_time():	
-    time = request.json['time']	
-    meridiem = request.json['meridiem']	
-    rxid = request.json['rxid']	
-    t = Times(rxid, time, meridiem)	
-    db.session.add(t)	
-    db.session.commit()	
-    return {"message":"time has been added"}
-
-#this deletes a perscription from the database
-@app.route('/delete/<id>', methods=['DELETE'])
-def prescription_deleted(id):
-    prescription = Prescriptions.query.get(id)
-
-    #deletes the corresponding time information
-    Times.query.filter_by(rxid=id).delete()
-
-    db.session.delete(prescription)
-    db.session.commit()
-
-    return prescription_schema.jsonify(prescription)
-
-@app.route('/get', methods=['GET'])
-def get_prescription():
-    all_prescriptions = Prescriptions.query.all()
-    results = prescriptions_schema.dump(all_prescriptions)
-    return jsonify(results)
-
-
-@app.route('/get/<id>', methods=['GET'])
-def post_details(id):
-    prescription = Prescriptions.query.get(id)
-    return prescription_schema.jsonify(prescription)
 
 #set up the login view and handle login logic
 @app.route('/login', methods=['GET', 'POST'])
@@ -224,11 +280,13 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
-#set up the user registration view and user registration logic
+#set up the registration view and registration logic
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
+    print("before validation")
     if form.validate_on_submit():
+        print("after validation")
         user = User(email=form.email.data.lower(),
                     username=form.username.data,
                     password=form.password.data)
@@ -239,38 +297,7 @@ def register():
         flash('You can now login')
     return render_template('register.html', form=form)
 
-#query all of the times in the times tables
-@app.route('/times', methods=['GET'])
-def get_times():
-    all_times = Times.query.all()
-    results = times_schema.dump(all_times)
-    return jsonify(results)
-
-#query by the specific prescription 
-@app.route('/times/<rxid>', methods=['GET'])
-def get_specific_prescription_time(rxid):       
-    prescription = Prescriptions.query.get(rxid)
-    time_list = []
-    for t in prescription.times:
-        time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
-    return jsonify(time_list)
-
-#this updates a perscription from the database
-@app.route('/update/<id>', methods=['GET', 'PUT'])
-def update_prescription(id):
-    prescription = Prescriptions.query.get(id)
-
-    name = request.json['name']
-    dosage = request.json['dosage']
-
-    prescription.name = name
-    prescription.dosage = dosage
-    db.session.commit()
-     
-    return prescription_schema.jsonify(prescription)
-
 
 
 if __name__ == '__main__':
     app.run(debug=True)
-

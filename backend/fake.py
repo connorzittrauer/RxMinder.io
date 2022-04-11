@@ -60,7 +60,7 @@ def times(p, numberTimes):
 ## Goal for another day, add functions to Flask CLI
 
 ## The following makes ten perscriptions with between one and four dosage times, per perscription
-'perscriptions(10, 4)'
+'perscriptions(5, 4)'
 
 ## The following makes five users, default value is one
 'users(5)'
