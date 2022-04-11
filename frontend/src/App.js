@@ -3,21 +3,24 @@ import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar';
-import Medications from './pages/medications';
-import Home from './pages';
-import About from './pages/about';
-import Interactions from './pages/interactions';
+import Medications from './pages/Medications';
+import About from './pages/About';
+import Interactions from './pages/Interactions';
+import Home from './pages/Home'
+import TimeMonitorProvider from './providers/TimeMonitorProvider';
 
 function App() {
   return (
       <Router>
       <NavBar />
-      <Routes>
-          <Route exact path='/' element={<Home />} />
-          <Route path='/medications' element={<Medications />} />
-          <Route path='/about' element={<About/>} />
-          <Route path='/interactions' element={<Interactions/>} />
-      </Routes>
+      <TimeMonitorProvider>
+        <Routes>
+            <Route exact path='/' element={ <Home />} />
+            <Route path='/medications' element={<Medications />} />
+            <Route path='/about' element={<About />} />
+            <Route path='/interactions' element={<Interactions/>} />
+        </Routes>
+      </TimeMonitorProvider>
       </Router>
   );
   }

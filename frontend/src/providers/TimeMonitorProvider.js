@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import APIService from "./APIService";
-
-const TimeMonitor = () => {
+import React, { useState, useEffect, createContext } from "react";
+import APIService from "../components/APIService";
+export const TimeMonitorContext = createContext(null)
+const TimeMonitorProvider = ({children}) => {
  const [currentTime, setCurrentTime] = useState(0);
 
   const schedule = require('node-schedule');
@@ -26,7 +26,11 @@ const TimeMonitor = () => {
     }, [])
 
 
-    return currentTime;
+    return (
+      <TimeMonitorContext.Provider value={{currentTime}}>
+        {children}
+      </TimeMonitorContext.Provider>
+    )
 }
 
-export default TimeMonitor
+export default TimeMonitorProvider

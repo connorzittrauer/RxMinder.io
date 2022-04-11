@@ -32,7 +32,7 @@ const About = () => {
   <div className="page">
       <h1>
           We at rxminder.io are dedicated to making sure you take your prescriptions on time. 
-          <Alert></Alert>
+          <Alert />
       </h1>
     </div>
   );
