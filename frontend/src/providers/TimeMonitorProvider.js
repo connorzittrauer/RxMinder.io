@@ -3,7 +3,7 @@ import APIService from "../components/APIService";
 export const TimeMonitorContext = createContext(null)
 const TimeMonitorProvider = ({children}) => {
  const [currentTime, setCurrentTime] = useState(0);
- const [checkerTime, setCheckerTime] = useState(0);
+
 
   const schedule = require('node-schedule');
   let firstLoad = true
@@ -11,8 +11,7 @@ const TimeMonitorProvider = ({children}) => {
     const getTime = () => {
       APIService.CallFetch('/current_time', 'GET')
       .then(data => {
-        setCurrentTime(data.time + data.meridiem)
-        setCheckerTime(data.time)
+        setCurrentTime(data.time)
       })
       .catch(error=> console.log(error))
   }
@@ -29,7 +28,7 @@ const TimeMonitorProvider = ({children}) => {
 
 
     return (
-      <TimeMonitorContext.Provider value={{currentTime, checkerTime}}>
+      <TimeMonitorContext.Provider value={{currentTime}}>
         {children}
       </TimeMonitorContext.Provider>
     )

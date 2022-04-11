@@ -7,7 +7,7 @@ import { TimeMonitorContext } from "../providers/TimeMonitorProvider";
 const About = () => {
 
   const schedule = require('node-schedule');
-  const {checkerTime} = useContext(TimeMonitorContext)
+  const {currentTime} = useContext(TimeMonitorContext)
   const [rxTimes, getPrescriptionTimes] = useState([])
   
   const getRxTimes = () => {
@@ -21,20 +21,20 @@ const About = () => {
 
   const buildArray = () => {
     for (let i = 0; i < rxTimes.length; i++){
-      console.log(rxTimes[i].time)
+      console.log(rxTimes[i].time + ' ' + rxTimes[i].meridiem)
     }
   }
   
 
- console.log(checkerTime)
+ //console.log(currentTime == "1:40 pm")
  
   useEffect(() => {
 
-    getRxTimes()
-  
-    const job = schedule.scheduleJob('*/1 * * * *', function(){
-      buildArray()
-    });
+   getRxTimes()
+   buildArray()
+    // const job = schedule.scheduleJob('*/1 * * * *', function(){
+    //   buildArray();
+    // });
   }, [])  
   
   return (
