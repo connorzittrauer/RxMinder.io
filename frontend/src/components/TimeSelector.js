@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react'
-import APIService from './APIService'
+
 
 
 const TimeSelector = (props) => {
@@ -8,10 +8,6 @@ const TimeSelector = (props) => {
     const[min, setMin] = useState(props.min)
     const[meridiem, setMer] = useState(props.meridiem)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> main
     useEffect(() => {
         props.setTime(hour + ":" + min, props.id)
         props.setMer(meridiem,  props.id)
@@ -36,23 +32,13 @@ const TimeSelector = (props) => {
     const minOpts = () => {
         let m
         let opts = []
-<<<<<<< HEAD
-        for(let i = 0; i <= 60; i = i + 1) {
+        for(let i = 0; i <= 59; i = i + 1) {
         if(i < 10) {
             m = "0" + i
         } else {
             m = i
         }
         opts.push(<option value={m} key={`min${m}`}>{m}</option>)
-=======
-        for(let i = 0; i <= 55; i = i + 5) {
-            if(i < 10) {
-                m = "0" + i
-            } else {
-                m = i
-            }
-            opts.push(<option value={m} key={`min${m}`}>{m}</option>)
->>>>>>> main
         }
         return opts
     }

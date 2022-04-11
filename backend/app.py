@@ -112,18 +112,18 @@ def get_specific_prescription_time(rxid):
 
 
 
-@app.route('/update-time/<id>', methods=['GET', 'PUT'])
-def update_time(id):
-    time_slots = Times.query.get(id)
+# @app.route('/update-time/<id>', methods=['GET', 'PUT'])
+# def update_time(id):
+#     time_slots = Times.query.get(id)
 
-    time = request.json['time']
-    meridiem = request.json['meridiem']
+#     time = request.json['time']
+#     meridiem = request.json['meridiem']
 
-    time_slots.time = time
-    time_slots.meridiem = meridiem
-    db.session.commit()
+#     time_slots.time = time
+#     time_slots.meridiem = meridiem
+#     db.session.commit()
 
-    return time_schema.jsonify(time_slots)
+#     return time_schema.jsonify(time_slots)
 
 
 

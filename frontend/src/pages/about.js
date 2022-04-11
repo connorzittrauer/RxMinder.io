@@ -22,10 +22,9 @@ const About = () => {
   const checkTimes = () => {
     for (let i = 0; i < rxTimes.length; i++){
       console.log(rxTimes[i].time + ' ' + rxTimes[i].meridiem)
-      console.log(currentTime == (rxTimes[i].time + ' ' + rxTimes[i].meridiem))
+      console.log(currentTime === (rxTimes[i].time + ' ' + rxTimes[i].meridiem))
     }
   }
- 
    useEffect(() => {
     const job = schedule.scheduleJob('*/1 * * * *', function(){
       getRxTimes()
