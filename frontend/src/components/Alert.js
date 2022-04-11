@@ -6,10 +6,10 @@ import APIService from "./APIService";
 
 const TimeMonitor = () => {
   const {currentTime} = useContext(TimeMonitorContext)
-  console.log('Inside Alert, from context:', currentTime)
+  //console.log('Inside Alert, from context:', currentTime)
   const alert = useAlert()
   //fetch all of the times, whenever one is equal to the current time, trigger an alert, display the medication to be taken
-
+  
   //make a call to the time input every minute
   useEffect (() => {
     // alert.show('Oh look, an alert!')
@@ -19,7 +19,6 @@ const TimeMonitor = () => {
     <button
       onClick={() => {
         alert.show('Oh look, an alert!')
-       
       }}
     >
       Show Alert

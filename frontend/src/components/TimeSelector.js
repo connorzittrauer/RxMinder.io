@@ -8,8 +8,6 @@ const TimeSelector = (props) => {
     const[meridiem, setMer] = useState(props.meridiem)
 
 
-
-
     useEffect(() => {
         props.setTime(hour + ":" + min)
         props.setMer(meridiem)
