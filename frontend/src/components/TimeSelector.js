@@ -25,7 +25,7 @@ const TimeSelector = (props) => {
     const minOpts = () => {
         let m
         let opts = []
-        for(let i = 0; i <= 55; i = i + 5) {
+        for(let i = 0; i <= 60; i = i + 1) {
         if(i < 10) {
             m = "0" + i
         } else {
