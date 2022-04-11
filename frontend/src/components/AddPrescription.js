@@ -11,14 +11,35 @@ function AddPrescription(props) {
   //these name and dosage variables are retrieved from the input form below and passed to the API service
   const[name, setName] = useState('')
   const[dosage, setDosage] = useState('')
-  const[time, setTime] = useState('1:00')
-  const[meridiem, setMer] = useState('am')
+  const[times, setTimes] = useState(['1:00'])
+  const[meridiems, setMers] = useState(['am'])
+  const[timeCount, setTimeCount] = useState(1)
 
-  const Add = () => {
-      APIService.CallFetch('add', 'POST', { name, dosage, time, meridiem})
+  const add = () => {
+      APIService.CallFetch('add', 'POST', { name, dosage, times, meridiems})
       .then(() => props.refresh())
       .then(console.log(name, dosage))
       .catch(error=> console.log(error))
+  }
+  const buildTimeSel = () => {
+    let timeComponents = []
+    for (let i = 0; i < timeCount; i++) {
+      timeComponents.push(<TimeSelector key={`sel${i}`} hour='1' min='00' meridiem='am' setTime={t => setTimeIndex(t, i)} setMer={m => setMerIndex(m, i)}/>)
+    }
+    return timeComponents
+  }
+  const setTimeIndex = (t, i) => {
+    let tempTimes = [...times]
+    tempTimes[i] = t
+    setTimes(tempTimes)
+  }
+  const setMerIndex = (m, i) => {
+    let tempMers = [...meridiems]
+    tempMers[i] = m
+    setMers(tempMers)
+  }
+  const addTime = () => {
+    setTimeCount(timeCount + 1) //this only works for primative data
   }
 
   return (
@@ -29,8 +50,9 @@ function AddPrescription(props) {
         <form>
           <input style={{marginRight: '15px'}} onChange={event => setName(event.target.value)} placeholder='prescription name'/>
           <input onChange={event => setDosage(event.target.value)} placeholder='dosage'/>
-          <TimeSelector hour='1' min='00' meridiem='am' setTime={t => setTime(t)} setMer={m => setMer(m)}/>
-          <button style={{marginTop: '15px'}} onClick={Add} type="submit">
+          {buildTimeSel()}
+          <button type="button" onClick={addTime}>Add Time</button>
+          <button style={{marginTop: '15px'}} onClick={add} type="submit">
             Submit
           </button>
         </form>
