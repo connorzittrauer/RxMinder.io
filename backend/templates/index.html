@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+<p>Welcome to the Website!</p>
+{% if current_user.is_authenticated %}
+<p>You are logged in</p>
+{% else %}
+<p>Unknown user!</p>
+{% endif %}
+{% endblock %}
