@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar';
-import Medications from './pages/Medications';
-import About from './pages/About';
-import Interactions from './pages/Interactions';
-import Home from './pages/Home'
+import Medications from './pages/medications';
+import About from './pages/about';
+import Interactions from './pages/interactions'
+import Home from './pages/home'
 import TimeMonitorProvider from './providers/TimeMonitorProvider';
 
 function App() {
