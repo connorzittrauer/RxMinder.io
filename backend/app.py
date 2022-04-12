@@ -132,6 +132,18 @@ def prescription_deleted(id):
 
     return prescription_schema.jsonify(prescription)
 
+@app.route('/get', methods=['GET'])
+def get_prescription():
+    all_prescriptions = Prescriptions.query.all()
+    results = prescriptions_schema.dump(all_prescriptions)
+    return jsonify(results)
+
+
+@app.route('/get/<id>', methods=['GET'])
+def post_details(id):
+    prescription = Prescriptions.query.get(id)
+    return prescription_schema.jsonify(prescription)
+
 #query all of the times in the times tables
 @app.route('/times', methods=['GET'])
 def get_times():
@@ -149,18 +161,6 @@ def get_specific_prescription_time(rxid):
         time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
     return jsonify(time_list)
 
-
-@app.route('/get', methods=['GET'])
-def get_prescription():
-    all_prescriptions = Prescriptions.query.all()
-    results = prescriptions_schema.dump(all_prescriptions)
-    return jsonify(results)
-
-
-@app.route('/get/<id>', methods=['GET'])
-def post_details(id):
-    prescription = Prescriptions.query.get(id)
-    return prescription_schema.jsonify(prescription)
 
 #this updates a record from  the database
 @app.route('/update/<id>', methods=['GET', 'PUT'])
