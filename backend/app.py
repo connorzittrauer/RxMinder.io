@@ -40,13 +40,6 @@ login_manager.init_app(app)
 
 
 
-#this provides current time endpoint for the splash page on the front
-@app.route('/current_time')
-def get_current_time():
-    currentTime = datetime.datetime.now()
-    return {'time': currentTime}
-
-
 #this is a model of the database columns
 class Prescriptions(db.Model):
      id = db.Column(db.Integer, primary_key=True)
@@ -148,6 +141,13 @@ def add_time():
     db.session.add(t)
     db.session.commit()
     return {"message":"time has been added"}
+
+
+#this provides current time endpoint for the splash page on the front
+@app.route('/current_time')
+def get_current_time():
+    currentTime = datetime.datetime.now()
+    return {'time': currentTime}
 
 
 #this deletes a record from the database
