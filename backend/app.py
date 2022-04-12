@@ -119,6 +119,19 @@ def add_time():
     db.session.commit()
     return {"message":"time has been added"}
 
+#this deletes a record from the database
+@app.route('/delete/<id>', methods=['DELETE'])
+def prescription_deleted(id):
+    prescription = Prescriptions.query.get(id)
+
+    #deletes the corresponding time information
+    Times.query.filter_by(rxid=id).delete()
+
+    db.session.delete(prescription)
+    db.session.commit()
+
+    return prescription_schema.jsonify(prescription)
+
 #query all of the times in the times tables
 @app.route('/times', methods=['GET'])
 def get_times():
@@ -163,20 +176,6 @@ def update_prescription(id):
      
     return prescription_schema.jsonify(prescription)
 
-
-
-#this deletes a record from the database
-@app.route('/delete/<id>', methods=['DELETE'])
-def prescription_deleted(id):
-    prescription = Prescriptions.query.get(id)
-
-    #deletes the corresponding time information
-    Times.query.filter_by(rxid=id).delete()
-
-    db.session.delete(prescription)
-    db.session.commit()
-
-    return prescription_schema.jsonify(prescription)
 
 @app.route('/time/<id>', methods=['DELETE'])
 def time_delete(id):
