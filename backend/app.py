@@ -192,6 +192,7 @@ def login():
         flash('Invalid email or password.')
     return render_template('login.html', form=form)
 
+
 #set up the logout view and logic
 @app.route('/logout')
 @login_required
@@ -199,6 +200,24 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('index'))
+
+
+#set up the registration view and registration logic
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    print("before validation")
+    if form.validate_on_submit():
+        print("after validation")
+        user = User(email=form.email.data.lower(),
+                    username=form.username.data,
+                    password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Account Created.')
+        return redirect(url_for('login'))
+        flash('You can now login')
+    return render_template('register.html', form=form)
 
 
 @app.route('/time/<id>', methods=['DELETE'])
@@ -283,24 +302,6 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
-
-
-#set up the registration view and registration logic
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    print("before validation")
-    if form.validate_on_submit():
-        print("after validation")
-        user = User(email=form.email.data.lower(),
-                    username=form.username.data,
-                    password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Account Created.')
-        return redirect(url_for('login'))
-        flash('You can now login')
-    return render_template('register.html', form=form)
 
 
 
