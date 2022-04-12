@@ -85,10 +85,19 @@ class Times_Schema(ma.Schema):
 time_schema = Times_Schema()
 times_schema = Times_Schema(many=True)
 
+
+
+#configure the login manager so it knows how to identify a user
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
 #set up the main index view
 @app.route("/")
 def index():
     return render_template('index.html')
+
 
 @app.route('/add', methods=['POST'])
 def add_prescription():
@@ -109,6 +118,7 @@ def add_prescription():
         i = i + 1
     return prescription_schema.jsonify(prescriptions)
 
+
 @app.route('/addTime', methods=['POST'])
 def add_time():
     time = request.json['time']
@@ -118,6 +128,7 @@ def add_time():
     db.session.add(t)
     db.session.commit()
     return {"message":"time has been added"}
+
 
 #this deletes a record from the database
 @app.route('/delete/<id>', methods=['DELETE'])
@@ -132,6 +143,7 @@ def prescription_deleted(id):
 
     return prescription_schema.jsonify(prescription)
 
+
 @app.route('/get', methods=['GET'])
 def get_prescription():
     all_prescriptions = Prescriptions.query.all()
@@ -144,6 +156,7 @@ def post_details(id):
     prescription = Prescriptions.query.get(id)
     return prescription_schema.jsonify(prescription)
 
+
 @app.route('/time/<id>', methods=['DELETE'])
 def time_delete(id):
     time = Times.query.get(id)
@@ -152,12 +165,14 @@ def time_delete(id):
 
     return {"message":"the time was deleted"}
 
+
 #query all of the times in the times tables
 @app.route('/times', methods=['GET'])
 def get_times():
     all_times = Times.query.all()
     results = times_schema.dump(all_times)
     return jsonify(results)
+
 
 #query by the specific prescription 
 @app.route('/times/<rxid>', methods=['GET'])
@@ -168,6 +183,7 @@ def get_specific_prescription_time(rxid):
         time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
     return jsonify(time_list)
 
+
 @app.route('/updateTime/<id>', methods=['PUT'])
 def update_time(id):
     newTime = request.json['time']
@@ -177,6 +193,7 @@ def update_time(id):
     time.meridiem = newMer
     db.session.commit()
     return {"message":"the time was updated"}
+
 
 #this updates a record from  the database
 @app.route('/update/<id>', methods=['GET', 'PUT'])
@@ -191,11 +208,6 @@ def update_prescription(id):
     db.session.commit()
      
     return prescription_schema.jsonify(prescription)
-
-#configure the login manager so it knows how to identify a user
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 
 #create a User class for out database that stores a password
