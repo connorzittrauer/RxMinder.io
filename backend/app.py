@@ -86,6 +86,26 @@ time_schema = Times_Schema()
 times_schema = Times_Schema(many=True)
 
 
+#create a User class for out database that stores a password
+class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key = True)
+    email = db.Column(db.String(64), unique=True, index=True)
+    username = db.Column(db.String(64), unique=True, index=True)
+    password_hash = db.Column(db.String(128))
+
+    @property
+    def password(self):
+        raise AttributeError('No soup for you!/nPasswords are unreadable.')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
 
 #configure the login manager so it knows how to identify a user
 @login_manager.user_loader
@@ -209,25 +229,6 @@ def update_prescription(id):
      
     return prescription_schema.jsonify(prescription)
 
-
-#create a User class for out database that stores a password
-class User(UserMixin, db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(64), unique=True, index=True)
-    username = db.Column(db.String(64), unique=True, index=True)
-    password_hash = db.Column(db.String(128))
-
-    @property
-    def password(self):
-        raise AttributeError('No soup for you!/nPasswords are unreadable.')
-
-    @password.setter
-    def password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def verify_password(self, password):
-        return check_password_hash(self.password_hash, password)
 
 #Define a Login Form to allow users to login
 class LoginForm(FlaskForm):
