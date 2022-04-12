@@ -273,6 +273,7 @@ def update_prescription(id):
     return prescription_schema.jsonify(prescription)
 
 
+### Flask backend forms, no need to move
 #Define a Login Form to allow users to login
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
@@ -303,6 +304,7 @@ class RegistrationForm(FlaskForm):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
 
+### End Flask baeckend forms
 
 
 if __name__ == '__main__':
