@@ -85,6 +85,11 @@ class Times_Schema(ma.Schema):
 time_schema = Times_Schema()
 times_schema = Times_Schema(many=True)
 
+#set up the main index view
+@app.route("/")
+def index():
+    return render_template('index.html')
+
 @app.route('/add', methods=['POST'])
 def add_prescription():
     name = request.json['name']
@@ -191,12 +196,6 @@ def update_time(id):
     db.session.commit()
     return {"message":"the time was updated"}
 
-
-
-#set up the main index view
-@app.route("/")
-def index():
-    return render_template('index.html')
 
 #configure the login manager so it knows how to identify a user
 @login_manager.user_loader
