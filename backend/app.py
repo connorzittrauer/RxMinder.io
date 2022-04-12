@@ -177,6 +177,30 @@ def post_details(id):
     return prescription_schema.jsonify(prescription)
 
 
+#set up the login view and handle login logic
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data.lower()).first()
+        if user is not None and user.verify_password(form.password.data):
+            login_user(user, form.remember_me.data)
+            next = request.args.get('next')
+            if next is None or not next.startswith('/'):
+                next = url_for('index')
+            return redirect(next)
+        flash('Invalid email or password.')
+    return render_template('login.html', form=form)
+
+#set up the logout view and logic
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('index'))
+
+
 @app.route('/time/<id>', methods=['DELETE'])
 def time_delete(id):
     time = Times.query.get(id)
@@ -260,29 +284,6 @@ class RegistrationForm(FlaskForm):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
 
-
-#set up the login view and handle login logic
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data.lower()).first()
-        if user is not None and user.verify_password(form.password.data):
-            login_user(user, form.remember_me.data)
-            next = request.args.get('next')
-            if next is None or not next.startswith('/'):
-                next = url_for('index')
-            return redirect(next)
-        flash('Invalid email or password.')
-    return render_template('login.html', form=form)
-
-#set up the logout view and logic
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('You have been logged out.')
-    return redirect(url_for('index'))
 
 #set up the registration view and registration logic
 @app.route('/register', methods=['GET', 'POST'])
