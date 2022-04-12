@@ -144,13 +144,20 @@ def post_details(id):
     prescription = Prescriptions.query.get(id)
     return prescription_schema.jsonify(prescription)
 
+@app.route('/time/<id>', methods=['DELETE'])
+def time_delete(id):
+    time = Times.query.get(id)
+    db.session.delete(time)
+    db.session.commit()
+
+    return {"message":"the time was deleted"}
+
 #query all of the times in the times tables
 @app.route('/times', methods=['GET'])
 def get_times():
     all_times = Times.query.all()
     results = times_schema.dump(all_times)
     return jsonify(results)
-
 
 #query by the specific prescription 
 @app.route('/times/<rxid>', methods=['GET'])
@@ -161,6 +168,15 @@ def get_specific_prescription_time(rxid):
         time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
     return jsonify(time_list)
 
+@app.route('/updateTime/<id>', methods=['PUT'])
+def update_time(id):
+    newTime = request.json['time']
+    newMer = request.json['meridiem']
+    time = Times.query.get(id)
+    time.time = newTime
+    time.meridiem = newMer
+    db.session.commit()
+    return {"message":"the time was updated"}
 
 #this updates a record from  the database
 @app.route('/update/<id>', methods=['GET', 'PUT'])
@@ -175,26 +191,6 @@ def update_prescription(id):
     db.session.commit()
      
     return prescription_schema.jsonify(prescription)
-
-
-@app.route('/time/<id>', methods=['DELETE'])
-def time_delete(id):
-    time = Times.query.get(id)
-    db.session.delete(time)
-    db.session.commit()
-
-    return {"message":"the time was deleted"}
-
-@app.route('/updateTime/<id>', methods=['PUT'])
-def update_time(id):
-    newTime = request.json['time']
-    newMer = request.json['meridiem']
-    time = Times.query.get(id)
-    time.time = newTime
-    time.meridiem = newMer
-    db.session.commit()
-    return {"message":"the time was updated"}
-
 
 #configure the login manager so it knows how to identify a user
 @login_manager.user_loader
