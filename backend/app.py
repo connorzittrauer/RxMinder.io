@@ -85,7 +85,34 @@ class Times_Schema(ma.Schema):
 time_schema = Times_Schema()
 times_schema = Times_Schema(many=True)
 
+@app.route('/add', methods=['POST'])
+def add_prescription():
+    name = request.json['name']
+    dosage = request.json['dosage']
+    times = request.json['times'] #now sending a list of times/meridiems below
+    meridiems = request.json['meridiems']
+    prescriptions = Prescriptions(name, dosage)
+    db.session.add(prescriptions)
+    db.session.commit()
+    db.session.refresh(prescriptions)
+    i = 0
+    for time in times:
+        time = Times(prescriptions.id, time, meridiems[i])
+        db.session.add(time)
+        db.session.commit()
+        db.session.refresh(time)
+        i = i + 1
+    return prescription_schema.jsonify(prescriptions)
 
+@app.route('/addTime', methods=['POST'])
+def add_time():
+    time = request.json['time']
+    meridiem = request.json['meridiem']
+    rxid = request.json['rxid']
+    t = Times(rxid, time, meridiem)
+    db.session.add(t)
+    db.session.commit()
+    return {"message":"time has been added"}
 
 #query all of the times in the times tables
 @app.route('/times', methods=['GET'])
@@ -116,36 +143,6 @@ def get_prescription():
 def post_details(id):
     prescription = Prescriptions.query.get(id)
     return prescription_schema.jsonify(prescription)
-
-
-@app.route('/add', methods=['POST'])
-def add_prescription():
-    name = request.json['name']
-    dosage = request.json['dosage']
-    times = request.json['times'] #now sending a list of times/meridiems below
-    meridiems = request.json['meridiems']
-    prescriptions = Prescriptions(name, dosage)
-    db.session.add(prescriptions)
-    db.session.commit()
-    db.session.refresh(prescriptions)
-    i = 0
-    for time in times:
-        time = Times(prescriptions.id, time, meridiems[i])
-        db.session.add(time)
-        db.session.commit()
-        db.session.refresh(time)
-        i = i + 1
-    return prescription_schema.jsonify(prescriptions)
-
-@app.route('/addTime', methods=['POST'])
-def add_time():
-    time = request.json['time']
-    meridiem = request.json['meridiem']
-    rxid = request.json['rxid']
-    t = Times(rxid, time, meridiem)
-    db.session.add(t)
-    db.session.commit()
-    return {"message":"time has been added"}
 
 #this updates a record from  the database
 @app.route('/update/<id>', methods=['GET', 'PUT'])
