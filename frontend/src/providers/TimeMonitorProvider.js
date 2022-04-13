@@ -3,9 +3,10 @@ import APIService from "../components/APIService";
 export const TimeMonitorContext = createContext(null)
 const TimeMonitorProvider = ({children}) => {
  const [currentTime, setCurrentTime] = useState(0);
-
+ 
 
   const schedule = require('node-schedule');
+
   let firstLoad = true
 
     const getTime = () => {
@@ -15,6 +16,8 @@ const TimeMonitorProvider = ({children}) => {
       })
       .catch(error=> console.log(error))
   }
+
+
   //I know its dirty but it works
     useEffect(() => {
       if (firstLoad) {

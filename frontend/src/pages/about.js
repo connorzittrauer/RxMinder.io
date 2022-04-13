@@ -16,10 +16,9 @@ const About = () => {
     .then(data => {
       getPrescriptionTimes(data)
     })
-    .then(console.log(rxTimes[0]))
     .catch(error=> console.log(error))
   }
-
+  //these console logs are firing irregularly and it fails when the prescription time is changed on the other page
   const checkTimes = () => {
     for (let i = 0; i < rxTimes.length; i++){
       console.log(rxTimes[i].time + ' ' + rxTimes[i].meridiem)
@@ -31,6 +30,7 @@ const About = () => {
     const job = schedule.scheduleJob('*/1 * * * *', function(){
      getRxTimes()      
      checkTimes()
+ 
     });
     
   }, [])  
