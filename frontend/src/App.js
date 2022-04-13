@@ -1,25 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar';
-import Medications from './pages/medications';
+import Medications from './pages/Medications';
 import Home from './pages';
-import About from './pages/about';
-import Interactions from './pages/interactions';
+import About from './pages/About';
+import Interactions from './pages/Interactions';
+import Login from './pages/Login';
 
 function App() {
+    const [isLogin, setIsLogin] = useState(false)
+
   return (
       <Router>
       <NavBar />
-      <Routes>
+        {isLogin ?
+        <Routes>
           <Route exact path='/' element={<Home />} />
-          <Route path='/medications' element={<Medications />} />
-          <Route path='/about' element={<About/>} />
-          <Route path='/interactions' element={<Interactions/>} />
-      </Routes>
+          <Route path='/Medications' element={<Medications />} />
+          <Route path='/About' element={<About/>} />
+          <Route path='/Interactions' element={<Interactions/>} />
+        </Routes> : 
+        <Login />}
       </Router>
   );
   }
+
     
 export default App;
