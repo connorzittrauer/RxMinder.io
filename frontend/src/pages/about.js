@@ -19,31 +19,30 @@ const About = () => {
     .catch(error=> console.log(error))
   }
   
-  const checkTimes = () => {
-    console.log(rxTimes)
-    for (let i = 0; i < rxTimes.length; i++){
-      console.log(rxTimes[i].time + ' ' + rxTimes[i].meridiem)
-      console.log(currentTime)
-      console.log((rxTimes[i].time + ' ' + rxTimes[i].meridiem))
-    }
-  }
-
    useEffect(() => {
     const job = schedule.scheduleJob('*/1 * * * *', function(){
      getRxTimes()      
     });
     // attempt at solving memory leak error
     return function cleanUp() {
-      for (const job in schedule.scheduledJobs) {
-        schedule.cancelJob(job)
-      }
+        job.cancel();
     }
     
-  }, [])  
+  }, [schedule])  
   // set up a useEffect to watch for state changes if state changes then call checkTimes()
   useEffect(()  => {
-    checkTimes()
-  }, [rxTimes, rxTimes.length])
+    const checkTimes = () => {
+
+      for (let i = 0; i < rxTimes.length; i++){
+  
+        console.log("Current time: " + currentTime)
+        console.log(currentTime === (rxTimes[i].time + ' ' + rxTimes[i].meridiem))
+        console.log("RX Time:" + rxTimes[i].time)
+      }
+    }
+     checkTimes()
+   
+  }, [rxTimes, rxTimes.length, currentTime])
   
   return (
   <div className="page">
