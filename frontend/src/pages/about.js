@@ -27,14 +27,14 @@ const About = () => {
     return function cleanUp() {
         job.cancel();
     }
-    
   }, [schedule])  
+
+
   // set up a useEffect to watch for state changes if state changes then call checkTimes()
   useEffect(()  => {
-    const checkTimes = () => {
 
+    const checkTimes = () => {
       for (let i = 0; i < rxTimes.length; i++){
-  
         console.log("Current time: " + currentTime)
         console.log(currentTime === (rxTimes[i].time + ' ' + rxTimes[i].meridiem))
         console.log("RX Time:" + rxTimes[i].time)
@@ -42,7 +42,7 @@ const About = () => {
     }
      checkTimes()
    
-  }, [rxTimes, rxTimes.length, currentTime])
+  }, [ rxTimes.length, currentTime])
   
   return (
   <div className="page">
