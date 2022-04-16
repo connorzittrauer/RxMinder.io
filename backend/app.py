@@ -44,12 +44,14 @@ login_manager.init_app(app)
 @app.route('/current_time', methods=['GET'])
 def get_current_time():
     now = datetime.now()
-    currentTime = now.strftime("%I:%M %P")
+    #currentTime = now.strftime("%I:%M:%P")
+    currentTime = now.strftime("%I:%M %p")
 
     #removes unnecessary leading 0s in time output (e.g '07:15 pm')
     if currentTime[0] == '0':
         currentTime = currentTime[1:]
-    return {'time': currentTime}
+
+    return {'time': currentTime.lower()}
 
 
 #this is a model of the database columns
