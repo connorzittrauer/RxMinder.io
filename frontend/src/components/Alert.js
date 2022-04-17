@@ -5,6 +5,7 @@ import APIService from "./APIService";
 
 
 const Alert = () => {
+  
   const schedule = require('node-schedule');
   const {currentTime} = useContext(TimeMonitorContext)
   const [rxTimes, setPrescriptionTimes] = useState([])
@@ -20,16 +21,10 @@ const Alert = () => {
     .catch(error=> console.log(error))
   }
   
-
-  
    useEffect(() => {
     const job = schedule.scheduleJob('*/1 * * * *', function(){
      getRxTimes()      
     });
-    // attempt at solving memory leak error
-    return function cleanUp() {
-        job.cancel();
-    }
   }, [schedule])  
 
 
@@ -47,7 +42,7 @@ const Alert = () => {
     }
      checkTimes()
    
-  }, [rxTimes.length, currentTime])
+  }, [currentTime])
   
   return (
     <div></div>
