@@ -113,22 +113,6 @@ def get_specific_prescription_time(rxid):
 
 
 
-
-# @app.route('/update-time/<id>', methods=['GET', 'PUT'])
-# def update_time(id):
-#     time_slots = Times.query.get(id)
-
-#     time = request.json['time']
-#     meridiem = request.json['meridiem']
-
-#     time_slots.time = time
-#     time_slots.meridiem = meridiem
-#     db.session.commit()
-
-#     return time_schema.jsonify(time_slots)
-
-
-
 @app.route('/get', methods=['GET'])
 def get_prescription():
     all_prescriptions = Prescriptions.query.all()
@@ -160,6 +144,7 @@ def add_prescription():
         db.session.refresh(time)
         i = i + 1
     return prescription_schema.jsonify(prescriptions)
+
 
 @app.route('/addTime', methods=['POST'])
 def add_time():

@@ -4,26 +4,54 @@ import { useAlert } from 'react-alert'
 import APIService from "./APIService";
 
 
-const TimeMonitor = () => {
+const Alert = () => {
+  const schedule = require('node-schedule');
   const {currentTime} = useContext(TimeMonitorContext)
-  //console.log('Inside Alert, from context:', currentTime)
-  const alert = useAlert()
-  //fetch all of the times, whenever one is equal to the current time, trigger an alert, display the medication to be taken
+  const [rxTimes, setPrescriptionTimes] = useState([])
+  const [rxName, getPresciptionName] = useState([])
   
-  //make a call to the time input every minute
-  useEffect (() => {
-    // alert.show('Oh look, an alert!')
-  }, [])
+  const alert = useAlert()
 
+  const getRxTimes = () => {
+    APIService.CallFetch('/times', 'GET')
+    .then(data => {
+      setPrescriptionTimes(data)
+    })
+    .catch(error=> console.log(error))
+  }
+  
+
+  
+   useEffect(() => {
+    const job = schedule.scheduleJob('*/1 * * * *', function(){
+     getRxTimes()      
+    });
+    // attempt at solving memory leak error
+    return function cleanUp() {
+        job.cancel();
+    }
+  }, [schedule])  
+
+
+  // set up a useEffect to watch for state changes if state changes then call checkTimes()
+  useEffect(()  => {
+
+    const checkTimes = () => {
+      for (let i = 0; i < rxTimes.length; i++){
+
+        if (currentTime === (rxTimes[i].time + ' ' + rxTimes[i].meridiem)){
+          //here we will eventually pass the RXname to the alert
+          alert.show("It is time to take your medication!")
+        }
+      }
+    }
+     checkTimes()
+   
+  }, [rxTimes.length, currentTime])
+  
   return (
-    <button
-      onClick={() => {
-        alert.show('Oh look, an alert!')
-      }}
-    >
-      Show Alert
-    </button>
+    <div></div>
   )
 }
   
-export default TimeMonitor;
+export default Alert;
