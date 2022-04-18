@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import APIService from "../components/APIService";
 import Prescription from "../components/Prescription";
 import AddPrescription from "../components/AddPrescription";
+import Alert from "../components/Alert";
 
 const Medications = () => {
     /* prescriptions are saved in an array */
@@ -35,8 +36,10 @@ const Medications = () => {
 
     return (
         <div>
+            <Alert></Alert>
             <AddPrescription refresh={getPrescriptions} reverseOrder={reverseOrder} />
             {renderPrescriptions()}
+  
         </div>
     )
 }
