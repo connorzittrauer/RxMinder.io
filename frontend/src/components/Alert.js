@@ -5,13 +5,11 @@ import APIService from "./APIService";
 
 
 const Alert = () => {
-  
-  const schedule = require('node-schedule');
+
   const {currentTime} = useContext(TimeMonitorContext)
   const [rxTimes, setPrescriptionTimes] = useState([])
-  const [rxName, getPresciptionName] = useState([])
-  
   const alert = useAlert()
+
 
   const getRxTimes = () => {
     APIService.CallFetch('/times', 'GET')
@@ -20,29 +18,29 @@ const Alert = () => {
     })
     .catch(error=> console.log(error))
   }
-  
-   useEffect(() => {
-    const job = schedule.scheduleJob('*/1 * * * *', function(){
-     getRxTimes()      
-    });
-  }, [schedule])  
+
+
+ 
+  const checkTimes = () => {
+    for (let i = 0; i < rxTimes.length; i++){
+    
+      if (currentTime === (rxTimes[i].time + ' ' + rxTimes[i].meridiem)){
+        //here we will eventually pass the RXname to the alert
+        alert.show("It is time to take your medication!")
+      }
+    }  
+  }
+
 
 
   // set up a useEffect to watch for state changes if state changes then call checkTimes()
   useEffect(()  => {
 
-    const checkTimes = () => {
-      for (let i = 0; i < rxTimes.length; i++){
+    getRxTimes()     
+    checkTimes()
 
-        if (currentTime === (rxTimes[i].time + ' ' + rxTimes[i].meridiem)){
-          //here we will eventually pass the RXname to the alert
-          alert.show("It is time to take your medication!")
-        }
-      }
-    }
-     checkTimes()
-   
   }, [currentTime])
+
   
   return (
     <div></div>

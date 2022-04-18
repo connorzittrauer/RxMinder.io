@@ -36,9 +36,10 @@ const Medications = () => {
 
     return (
         <div>
+            <Alert></Alert>
             <AddPrescription refresh={getPrescriptions} reverseOrder={reverseOrder} />
             {renderPrescriptions()}
-        <Alert></Alert>
+
         </div>
     )
 }
