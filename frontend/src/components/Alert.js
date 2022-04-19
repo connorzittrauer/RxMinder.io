@@ -1,4 +1,4 @@
-import {React, useState, useEffect, useContext} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { TimeMonitorContext } from "../providers/TimeMonitorProvider";
 import { useAlert } from 'react-alert'
 import APIService from "./APIService";
