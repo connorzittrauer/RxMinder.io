@@ -74,7 +74,7 @@ def perscriptionAdd(userId=1, rxid=1):
 'perscriptions()'
 
 ## The following makes users, default number is one
-'users()'
+'users(3)'
 
 ## The following adds perscriptions to a user, defaults to first user, first medicine
 'perscriptionAdd()'
