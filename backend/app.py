@@ -128,11 +128,6 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-#set up the main index view
-@app.route("/")
-def index():
-    return render_template('index.html')
-
 
 @app.route('/add', methods=['POST'])
 def add_prescription():
@@ -191,6 +186,10 @@ def prescription_deleted(id):
 
     return prescription_schema.jsonify(prescription)
 
+@app.route('/get-user-id/<username>', methods=['GET'])
+def get_user_id(username):
+    current_user = User.query.filter_by(username=username).first()
+    return jsonify({'CurrentUserID' : current_user.id})
 
 @app.route('/get', methods=['GET'])
 def get_prescription():
@@ -203,6 +202,7 @@ def get_prescription():
 def post_details(id):
     prescription = Prescriptions.query.get(id)
     return prescription_schema.jsonify(prescription)
+
 
 @app.route('/time/<id>', methods=['DELETE'])
 def time_delete(id):
@@ -265,6 +265,7 @@ def get_user_prescriptions(id):
         rxIDs.append({'id': q.id})
 
     return jsonify(rxIDs)
+
 
 #region login logic    
 #set up the login view and handle login logic
