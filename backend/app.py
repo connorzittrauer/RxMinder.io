@@ -256,7 +256,15 @@ def update_prescription(id):
      
     return prescription_schema.jsonify(prescription)
 
+#fetch all of the prescriptions for a specific user
+@app.route('/get-user-prescriptions/<id>', methods=['GET'])
+def get_user_prescriptions(id):
+    query = User.query.get(id)
+    rxIDs = []
+    for q in query.prescriptions:
+        rxIDs.append({'id': q.id})
 
+    return jsonify(rxIDs)
 
 #region login logic    
 #set up the login view and handle login logic
