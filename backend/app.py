@@ -214,19 +214,30 @@ def logout():
 #set up the registration view and registration logic
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
-    print("before validation")
-    if form.validate_on_submit():
-        print("after validation")
-        user = User(email=form.email.data.lower(),
-                    username=form.username.data,
-                    password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Account Created.')
-        return redirect(url_for('login'))
-        flash('You can now login')
-    return render_template('register.html', form=form)
+    email = request.json['email']
+    password = request.json['password']
+    username = request.json['userName']
+    user = User(email=email,
+                username=username,
+                password=password)
+    db.session.add(user)
+    db.session.commit()
+    #may need to add validation again just getting it to work -BC
+    return {"success" : True}
+
+    # form = RegistrationForm()
+    # print("before validation")
+    # if form.validate_on_submit():
+    #     print("after validation")
+    #     user = User(email=form.email.data.lower(),
+    #                 username=form.username.data,
+    #                 password=form.password.data)
+    #     db.session.add(user)
+    #     db.session.commit()
+    #     flash('Account Created.')
+    #     return redirect(url_for('login'))
+    #     flash('You can now login')
+    # return render_template('register.html', form=form)
 
 
 @app.route('/time/<id>', methods=['DELETE'])

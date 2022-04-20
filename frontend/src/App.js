@@ -5,24 +5,29 @@ import './App.css';
 import NavBar from './components/NavBar';
 import Medications from './pages/Medications';
 import Home from './pages';
-import About from './pages/About';
+import About from './pages/about';
 import Interactions from './pages/Interactions';
 import Login from './pages/Login';
+import Registration from './pages/registration';
 
 function App() {
     const [isLogin, setIsLogin] = useState(false)
+    const [userId, setUserId] = useState(null)
+    const loginHandler = (r) => {
+      setIsLogin(r.success)
+      setUserId(r.id)
+    }
 
   return (
       <Router>
       <NavBar />
-        {isLogin ?
         <Routes>
           <Route exact path='/' element={<Home />} />
-          <Route path='/Medications' element={<Medications />} />
+          <Route path='/registration' element={<Registration />} />
+          <Route path='/Medications' element={isLogin ? <Medications userId={userId} /> : <Login setLogin={(r) => loginHandler(r)} />} />
           <Route path='/About' element={<About/>} />
-          <Route path='/Interactions' element={<Interactions/>} />
-        </Routes> : 
-        <Login />}
+          <Route path='/Interactions' element={isLogin ? <Interactions userId={userId} /> : <Login setLogin={(r) => loginHandler(r)} />} />
+        </Routes>
       </Router>
   );
   }
