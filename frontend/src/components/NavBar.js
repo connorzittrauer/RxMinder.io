@@ -21,10 +21,11 @@ const NavBar = () => {
           <NavLink to="/interactions" activeStyle>
             Interactions
           </NavLink>
-          
-          <NavLink to="/" onClick={() => console.log("needs to navigate to the login page")} activeStyle>
+          <button onClick={() => navigate('/medications', {isLogin: false})}>Can I do this</button>       
+          {/* <NavLink to="/" onClick={() => console.log("needs to navigate to the login page")} activeStyle>
             Logout
-          </NavLink>
+          </NavLink> */}
+          <h1>Logout</h1>
         </NavMenu>
       </Nav>
     </>
