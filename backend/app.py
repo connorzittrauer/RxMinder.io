@@ -94,7 +94,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    perscriptions = db.relationship('Prescriptions',
+    prescriptions = db.relationship('Prescriptions',
         secondary=user_prescriptions, backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
 
     @property
@@ -108,11 +108,11 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    ## Adds a perscription to a user defaults to first user, first perscription
-    def perscriptionAdd(userId=1, rxid=1):
+    ## Adds a prescription to a user defaults to first user, first prescription
+    def prescriptionAdd(userId=1, rxid=1):
         u = User.query.filter_by(id=userId).first()
         p = Prescriptions.query.filter_by(id=rxid).first()
-        u.perscriptions.append(p)
+        u.prescriptions.append(p)
         db.session.add(u)
         try:
             db.session.commit()
