@@ -1,8 +1,10 @@
 import React from "react";
 import { Nav, NavLink, NavMenu } 
     from "./NavBarElements";
-  
+import { Navigate, useNavigate } from 'react-router-dom';
+
 const NavBar = () => {
+  const navigate = useNavigate()
   return (
     <>
       <Nav>
@@ -19,7 +21,8 @@ const NavBar = () => {
           <NavLink to="/interactions" activeStyle>
             Interactions
           </NavLink>
-          <NavLink to="/login" activeStyle>
+          
+          <NavLink to="/" onClick={() => console.log("needs to navigate to the login page")} activeStyle>
             Logout
           </NavLink>
         </NavMenu>
