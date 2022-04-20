@@ -17,7 +17,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 
-
+#region classes/models
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
@@ -28,6 +28,7 @@ add_config  = {
 }
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
 
 #this configures the database/joins it with the flask application
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'master.db')
@@ -119,6 +120,7 @@ class User(UserMixin, db.Model):
         except IntegrityError:
             db.session.rollback()
 
+#endregion
 
 #configure the login manager so it knows how to identify a user
 @login_manager.user_loader
@@ -202,70 +204,6 @@ def post_details(id):
     prescription = Prescriptions.query.get(id)
     return prescription_schema.jsonify(prescription)
 
-    
-#set up the login view and handle login logic
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    # this logic is to login with an api call from react frontend
-    email = request.json['email']
-    password = request.json['password']
-    user = User.query.filter_by(email=email).first()
-    if user is not None and user.verify_password(password):
-        return {'id': user.id, 'success': True}
-    return {'success': False}
-    # this logic is to use the flask templating system to login with forms
-    # form = LoginForm()
-    # if form.validate_on_submit():
-    #     user = User.query.filter_by(email=form.email.data.lower()).first()
-    #     print('logging in user id', user.id)
-    #     if user is not None and user.verify_password(form.password.data):
-    #         login_user(user, form.remember_me.data)
-    #         next = request.args.get('next')
-    #         if next is None or not next.startswith('/'):
-    #             next = url_for('index')
-    #         return redirect(next)
-    #     flash('Invalid email or password.')
-    # return render_template('login.html', form=form)
-
-
-#set up the logout view and logic
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('You have been logged out.')
-    return redirect(url_for('index'))
-
-
-#set up the registration view and registration logic
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    email = request.json['email']
-    password = request.json['password']
-    username = request.json['userName']
-    user = User(email=email,
-                username=username,
-                password=password)
-    db.session.add(user)
-    db.session.commit()
-    #may need to add validation again just getting it to work -BC
-    return {"success" : True}
-
-    # form = RegistrationForm()
-    # print("before validation")
-    # if form.validate_on_submit():
-    #     print("after validation")
-    #     user = User(email=form.email.data.lower(),
-    #                 username=form.username.data,
-    #                 password=form.password.data)
-    #     db.session.add(user)
-    #     db.session.commit()
-    #     flash('Account Created.')
-    #     return redirect(url_for('login'))
-    #     flash('You can now login')
-    # return render_template('register.html', form=form)
-
-
 @app.route('/time/<id>', methods=['DELETE'])
 def time_delete(id):
     time = Times.query.get(id)
@@ -319,6 +257,43 @@ def update_prescription(id):
     return prescription_schema.jsonify(prescription)
 
 
+
+#region login logic    
+#set up the login view and handle login logic
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # this logic is to login with an api call from react frontend
+    email = request.json['email']
+    password = request.json['password']
+    user = User.query.filter_by(email=email).first()
+    if user is not None and user.verify_password(password):
+        return {'id': user.id, 'success': True}
+    return {'success': False}
+
+
+#set up the logout view and logic
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('index'))
+
+
+#set up the registration view and registration logic
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    email = request.json['email']
+    password = request.json['password']
+    username = request.json['userName']
+    user = User(email=email,
+                username=username,
+                password=password)
+    db.session.add(user)
+    db.session.commit()
+    #may need to add validation again just getting it to work -BC
+    return {"success" : True}
+
 ### Flask backend forms, no need to move
 #Define a Login Form to allow users to login
 class LoginForm(FlaskForm):
@@ -352,6 +327,7 @@ class RegistrationForm(FlaskForm):
 
 ### End Flask baeckend forms
 
+#endregion
 
 if __name__ == '__main__':
     app.run(debug=True)
