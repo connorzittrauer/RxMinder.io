@@ -7,6 +7,7 @@ import Alert from '../components/Alert';
 const Home = () => {
 
   const {currentTime} = useContext(TimeMonitorContext)
+  const VariableContext = React.createContext('a variable')
 
   return (
     <div className='page'>

@@ -4,8 +4,9 @@ import APIService from "../components/APIService";
 import Alert from '../components/Alert';
 import { TimeMonitorContext } from "../providers/TimeMonitorProvider";
 
+
 const About = () => {
-  
+
 // Keep this commented code below here for possible debugging in the future!
 
 //   #region
@@ -47,7 +48,9 @@ const About = () => {
   <div className="page">
       <h1>
           We at rxminder.io are dedicated to making sure you take your prescriptions on time. 
+          
       </h1>
+
       <Alert></Alert>
     </div>
   );

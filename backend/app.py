@@ -186,9 +186,9 @@ def prescription_deleted(id):
 
     return prescription_schema.jsonify(prescription)
 
-@app.route('/get-user-id/<username>', methods=['GET'])
-def get_user_id(username):
-    current_user = User.query.filter_by(username=username).first()
+@app.route('/get-user-id/<email>', methods=['GET'])
+def get_user_id(email):
+    current_user = User.query.filter_by(email=email).first()
     return jsonify({'CurrentUserID' : current_user.id})
 
 @app.route('/get', methods=['GET'])

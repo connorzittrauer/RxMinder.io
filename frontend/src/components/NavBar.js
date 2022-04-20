@@ -19,6 +19,9 @@ const NavBar = () => {
           <NavLink to="/interactions" activeStyle>
             Interactions
           </NavLink>
+          <NavLink to="/login" activeStyle>
+            Logout
+          </NavLink>
         </NavMenu>
       </Nav>
     </>

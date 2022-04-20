@@ -4,14 +4,28 @@ import APIService from "../components/APIService";
 const Login = (props) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [globalID, setGlobalID] = useState([])
+
+  
     const callLogin = () => {
         APIService.CallFetch('login', 'POST', {email, password})
         .then((r) => {
             if(r.success) {
                 props.setLogin(r)
+                //if successful, set the global login variable equal to the current user ID
+  
             }
          })
         .catch((e) => console.log(e))
+
+    }
+
+    const getGlobalID = () => {
+        APIService.CallFetch(`get-user-id/${email}`, 'GET')
+        .then(data => {
+            setGlobalID(data)
+        })
+        .then(console.log(globalID.CurrentUserID))
     }
     return (
         <div className="loginDiv">
@@ -24,10 +38,14 @@ const Login = (props) => {
             <input id="password" name="password" placeholder="Password" value={password} onChange={(p) => setPassword(p.target.value)} />
             <br />
             <br />
-            <button className="loginButton" onClick={callLogin} type='button'>Login</button>
+            <button className="loginButton" onClick={() => {
+                callLogin()
+                getGlobalID()
+            }}type='button'>Login</button>
             <br />
             <br />
             <a href="/registration">Create Account</a>
+    
         </div>
     )
 }
