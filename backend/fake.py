@@ -19,7 +19,7 @@ def users(count=1):
         except IntegrityError:
             db.session.rollback()
 
-def perscriptions(count=10, numberTimes=1):
+def perscriptions(count=10, numberTimes=3):
     fake = Faker()
     fake.add_provider(ModelOrganism)
     i = 0
@@ -51,6 +51,17 @@ def times(p, numberTimes):
         except IntegrityError:
             db.session.rollback()
 
+def perscriptionAdd(userId=1, rxid=1):
+    u = User.query.filter_by(id=userId).first()
+    p = Prescriptions.query.filter_by(id=rxid).first()
+    u.perscriptions.append(p)
+    db.session.add(u)
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+
+
 
 ## How to use:
 'Remove the apostrophes from one of the following functions and set values as needed'
@@ -59,8 +70,11 @@ def times(p, numberTimes):
 'after you are done, feel free to run "pip uninstall -r fakerReqs.txt" '
 ## Goal for another day, add functions to Flask CLI
 
-## The following makes ten perscriptions with between one and four dosage times, per perscription
-'perscriptions(5, 4)'
+## The following makes perscriptions, the defualt is ten with between one and three dosage times, per perscription
+'perscriptions()'
 
-## The following makes five users, default value is one
-'users(5)'
+## The following makes users, default number is one
+'users(3)'
+
+## The following adds perscriptions to a user, defaults to first user, first medicine
+'perscriptionAdd()'

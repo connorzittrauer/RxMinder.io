@@ -2,6 +2,7 @@ from dataclasses import dataclass, fields
 import json
 import os
 import time, datetime
+from datetime import datetime
 from unicodedata import name
 from unittest import result
 from flask import Flask, request, jsonify ,render_template, redirect, request, session, url_for, flash
@@ -10,6 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow 
 from flask_cors import CORS, cross_origin
 from flask_wtf import FlaskForm
+from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
@@ -32,6 +34,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'ma
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'hard to guess string'
 
+
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 login_manager = LoginManager()
@@ -39,6 +42,11 @@ login_manager.login_view = 'login'
 login_manager.init_app(app)
 
 
+# Set association database
+user_prescriptions = db.Table('user_prescriptions',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('prescription_id', db.Integer, db.ForeignKey('prescriptions.id'))
+)
 
 #this is a model of the database columns
 class Prescriptions(db.Model):
@@ -86,6 +94,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    perscriptions = db.relationship('Prescriptions',
+        secondary=user_prescriptions, backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
 
     @property
     def password(self):
@@ -98,6 +108,16 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    ## Adds a perscription to a user defaults to first user, first perscription
+    def perscriptionAdd(userId=1, rxid=1):
+        u = User.query.filter_by(id=userId).first()
+        p = Prescriptions.query.filter_by(id=rxid).first()
+        u.perscriptions.append(p)
+        db.session.add(u)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
 
 
 #configure the login manager so it knows how to identify a user
@@ -144,11 +164,17 @@ def add_time():
 
 
 #this provides current time endpoint for the splash page on the front
-@app.route('/current_time')
+@app.route('/current_time', methods=['GET'])
 def get_current_time():
-    currentTime = datetime.datetime.now()
-    return {'time': currentTime}
+    now = datetime.now()
+    #currentTime = now.strftime("%I:%M:%P")
+    currentTime = now.strftime("%I:%M %p")
 
+    #removes unnecessary leading 0s in time output (e.g '07:15 pm')
+    if currentTime[0] == '0':
+        currentTime = currentTime[1:]
+
+    return {'time': currentTime.lower()}
 
 #this deletes a record from the database
 @app.route('/delete/<id>', methods=['DELETE'])

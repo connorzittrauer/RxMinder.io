@@ -14,7 +14,7 @@ const Registration = () => {
             APIService.CallFetch('register', 'POST', {email, password, userName})
                 .then((r) => {
                     if(r.success) {
-                        navigate('/Medications')
+                        navigate('/medications')
                     }
                 })
                 .catch((e) => console.log(e))
