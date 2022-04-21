@@ -262,7 +262,7 @@ def get_user_prescriptions(id):
     query = User.query.get(id)
     rxIDs = []
     for q in query.prescriptions:
-        rxIDs.append({'id': q.id})
+        rxIDs.append({'dosage': q.dosage, 'id': q.id, 'name': q.name})
 
     return jsonify(rxIDs)
 

@@ -4,17 +4,24 @@ import Prescription from "../components/Prescription";
 import AddPrescription from "../components/AddPrescription";
 import Alert from "../components/Alert";
 
-const Medications = () => {
+const Medications = (props) => {
     /* prescriptions are saved in an array */
     const [prescriptions, setPrescriptions] = useState([])
     
     //making a call to the APIservice
+    // const getPrescriptions = () => {
+    //     APIService.CallFetch('get', 'GET')
+    //     .then(resp => setPrescriptions(resp.reverse())) // saves most recent prescription first
+    //     .catch(error=> console.log(error))
+    // }
+   
     const getPrescriptions = () => {
-        APIService.CallFetch('get', 'GET')
+        APIService.CallFetch(`get-user-prescriptions/${props.userId}`, 'GET')
         .then(resp => setPrescriptions(resp.reverse())) // saves most recent prescription first
         .catch(error=> console.log(error))
     }
-   
+
+    console.log(props.userId)
     //when component mounts call getPrescriptions
     useEffect(() => {
         getPrescriptions()
