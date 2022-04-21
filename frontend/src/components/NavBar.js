@@ -1,10 +1,9 @@
 import React from "react";
 import { Nav, NavLink, NavMenu } 
     from "./NavBarElements";
-import { Navigate, useNavigate } from 'react-router-dom';
+
 
 const NavBar = () => {
-  const navigate = useNavigate()
   return (
     <>
       <Nav>
@@ -21,11 +20,11 @@ const NavBar = () => {
           <NavLink to="/interactions" activeStyle>
             Interactions
           </NavLink>
-          <button onClick={() => navigate('/medications', {isLogin: false})}>Can I do this</button>       
-          {/* <NavLink to="/" onClick={() => console.log("needs to navigate to the login page")} activeStyle>
+          {/* <button onClick={() => navigate('/medications', {isLogin: false})}>Can I do this</button>        */}
+          <NavLink to="/logout" activeStyle>
             Logout
-          </NavLink> */}
-          <h1>Logout</h1>
+          </NavLink>
+          {/* <h1>Logout</h1> */}
         </NavMenu>
       </Nav>
     </>

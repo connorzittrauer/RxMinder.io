@@ -1,12 +1,21 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import APIService from "../components/APIService";
+import { useNavigate } from 'react-router-dom';
 
 const Login = (props) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [globalID, setGlobalID] = useState([])
+    const navigate = useNavigate()
 
-  
+    useEffect(() => {
+        if (props.logout) {
+            props.setLogin(false)
+            navigate('/medications')
+        }
+      }, [props, navigate])
+    
+
     const callLogin = () => {
         APIService.CallFetch('login', 'POST', {email, password})
         .then((r) => {

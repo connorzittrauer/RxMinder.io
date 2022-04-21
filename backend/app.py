@@ -286,7 +286,7 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out.')
-    return redirect(url_for('index'))
+    return redirect(url_for('index')) #needs to return json for frontend
 
 
 #set up the registration view and registration logic
