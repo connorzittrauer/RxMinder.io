@@ -16,11 +16,13 @@ function AddPrescription(props) {
   const[timeCount, setTimeCount] = useState(1)
 
   const add = () => {
-      APIService.CallFetch('add', 'POST', { name, dosage, times, meridiems})
-      // .then(() => props.refresh())
-      .then(console.log(name, dosage))
-      .catch(error=> console.log(error))
+    APIService.CallFetch(`add-user-prescription/${props.userId}`, 'POST', { name, dosage, times, meridiems})
+    // .then(() => props.refresh())
+    .then(console.log(name, dosage))
+    .catch(error=> console.log(error))
   }
+
+
   const buildTimeSel = () => {
     let timeComponents = []
     for (let i = 0; i < timeCount; i++) {

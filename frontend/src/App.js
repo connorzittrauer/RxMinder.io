@@ -10,6 +10,7 @@ import Home from './pages/home';
 import TimeMonitorProvider from './providers/TimeMonitorProvider';
 import Login from './pages/login';
 import Registration from './pages/registration';
+import AddPrescription from './components/AddPrescription';
 
 function App() {
     const [isLogin, setIsLogin] = useState(false)
