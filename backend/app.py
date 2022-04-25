@@ -266,6 +266,43 @@ def get_user_prescriptions(id):
 
     return jsonify(rxIDs)
 
+@app.route('/add-user-prescription/<id>', methods=['POST'])
+def add_user_prescription(id):
+    name = request.json['name']
+    dosage = request.json['dosage']
+    times = request.json['times'] #now sending a list of times/meridiems below
+    meridiems = request.json['meridiems']
+
+    #find the current user
+    user = User.query.filter_by(id=id)
+    
+    #create a new prescription object
+    prescription = Prescriptions(name, dosage)
+    db.session.add(prescription)
+    db.session.commit()
+    db.session.refresh(prescription)
+        
+    i = 0
+    for time in times:
+        time = Times(prescription.id, time, meridiems[i])
+        db.session.add(time)
+        db.session.commit()
+        db.session.refresh(time)
+        i = i + 1
+    
+    #attach user to the prescription
+    user.prescriptions.append(prescription)
+    db.session.add(user)
+
+    try:
+        db.session.commit()
+    except IntegrityError:
+            db.session.rollback()
+    # u = User.query.filter_by(id=id).first()
+
+
+    return prescription_schema.jsonify(prescription)
+
 
 #region login logic    
 #set up the login view and handle login logic
