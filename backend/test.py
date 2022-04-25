@@ -18,7 +18,7 @@ from app import User
 
 
 ##Model for the endpoint
-u = User.query.get(1)
+u = User.query.get(6)
 for p in u.prescriptions:
     print(p.name)
 

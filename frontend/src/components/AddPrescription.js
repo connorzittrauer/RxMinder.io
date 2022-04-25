@@ -44,6 +44,8 @@ function AddPrescription(props) {
     setTimeCount(timeCount + 1) //this only works for primative data
   }
 
+
+
   return (
     <div className='formDiv'>
       <button style={{marginRight: '15px'}} onClick={viewData}>Add New Prescription</button>
