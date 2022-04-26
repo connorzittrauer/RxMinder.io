@@ -14,6 +14,7 @@ const Medications = (props) => {
         .catch(error=> console.log(error))
     }
 
+
   
     //when component mounts call getPrescriptions
     useEffect(() => {
@@ -39,7 +40,7 @@ const Medications = (props) => {
             <Alert></Alert>
             <AddPrescription refresh={getPrescriptions} reverseOrder={reverseOrder} userId={props.userId}/>
             {renderPrescriptions()}
-  
+            
         </div>
     )
 }
