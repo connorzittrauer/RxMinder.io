@@ -17,8 +17,11 @@ function AddPrescription(props) {
 
   const add = () => {
     APIService.CallFetch(`add-user-prescription/${props.userId}`, 'POST', { name, dosage, times, meridiems})
-    // .then(() => props.refresh())
-    .then(console.log(name, dosage))
+     .then(() => {
+       props.refresh()
+       setFormStatus(false)
+      })
+    // .then(console.log(name, dosage))
     .catch(error=> console.log(error))
   }
 
@@ -51,15 +54,15 @@ function AddPrescription(props) {
       <button style={{marginRight: '15px'}} onClick={viewData}>Add New Prescription</button>
       <button style={{marginBottom: '25px'}} onClick={props.reverseOrder}>Reverse Order</button>
       {showForm && (
-        <form>
+        <div>
           <input style={{marginRight: '15px'}} onChange={event => setName(event.target.value)} placeholder='prescription name'/>
           <input onChange={event => setDosage(event.target.value)} placeholder='dosage'/>
           {buildTimeSel()}
           <button type="button" onClick={addTime}>Add Time</button>
-          <button style={{marginTop: '15px'}} onClick={add} type="submit">
+          <button style={{marginTop: '15px'}} onClick={add} type="button">
             Submit
           </button>
-        </form>
+        </div>
       )}
     </div>
   );
