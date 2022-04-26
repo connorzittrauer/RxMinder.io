@@ -31,17 +31,16 @@ from app import User
 #     print(t.time)
 
 
-user = User.query.get(5)
-query = user.prescriptions
+user = User.query.get(6)
+prescriptions = user.prescriptions
 #i is less than or equal to the length of rx_card
 num_of_prescriptions = 0
-for num in query:
-    print(num.id)
+for p in prescriptions:
     num_of_prescriptions +=1    
 
 i = 0
 while(i < num_of_prescriptions):
-    times = (query[i].times)
+    times = (prescriptions[i].times)
     for t in times:
-        print(t.time)
+        print(str(t.id) + " " + str(t.rxid) + " " + t.time + " " + t.meridiem)
     i += 1

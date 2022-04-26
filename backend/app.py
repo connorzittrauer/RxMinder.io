@@ -231,6 +231,26 @@ def get_specific_prescription_time(rxid):
     return jsonify(time_list)
 
 
+@app.route('/get-user-prescription-times/<id>', methods=['GET'])
+def get_user_prescription_times(id):
+    time_list = []
+    user = User.query.get(id)
+    prescriptions = user.prescriptions
+ 
+    num_of_prescriptions = 0
+    for p in prescriptions:
+        num_of_prescriptions +=1    
+
+    i = 0
+    while(i < num_of_prescriptions):
+        times = (prescriptions[i].times)
+        for t in times:
+            time_list.append({'id':t.id, 'rxid': t.rxid, 'time': t.time, 'meridiem': t.meridiem})
+        i += 1
+
+    return jsonify(time_list)
+
+
 @app.route('/updateTime/<id>', methods=['PUT'])
 def update_time(id):
     newTime = request.json['time']
