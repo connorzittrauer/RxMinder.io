@@ -4,21 +4,27 @@ import { useAlert } from 'react-alert'
 import APIService from "./APIService";
 
 
-const Alert = () => {
+const Alert = (props) => {
 
   const {currentTime} = useContext(TimeMonitorContext)
   const [rxTimes, setPrescriptionTimes] = useState([])
   const alert = useAlert()
 
+  // const getRxTimes = () => {
+  //   APIService.CallFetch('/times', 'GET')
+  //   .then(data => {
+  //     setPrescriptionTimes(data)
+  //   })
+  //   .catch(error=> console.log(error))
+  // }
 
   const getRxTimes = () => {
-    APIService.CallFetch('/times', 'GET')
+    APIService.CallFetch(`get-user-prescription-times/${props.userId}`, 'GET')
     .then(data => {
       setPrescriptionTimes(data)
     })
     .catch(error=> console.log(error))
   }
-
 
  
   const checkTimes = () => {

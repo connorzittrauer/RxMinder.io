@@ -11,7 +11,7 @@ import TimeMonitorProvider from './providers/TimeMonitorProvider';
 import Login from './pages/login';
 import Registration from './pages/registration';
 import AddPrescription from './components/AddPrescription';
-
+import Alert from './components/Alert';
 function App() {
     const [isLogin, setIsLogin] = useState(false)
     const [userId, setUserId] = useState(null)
@@ -32,6 +32,7 @@ function App() {
           <Route path='/interactions' element={isLogin ? <Interactions userId={userId} /> : <Login setLogin={(r) => loginHandler(r)} />} />
           <Route path='/logout' element={<Login setLogin={(r) => loginHandler(r)} logout={true} />} />
         </Routes>
+        <Alert userId={userId} />
       </TimeMonitorProvider>
       </Router>
   );
