@@ -17,7 +17,7 @@ const Alert = (props) => {
   //   })
   //   .catch(error=> console.log(error))
   // }
-
+  
   const getRxTimes = () => {
     APIService.CallFetch(`get-user-prescription-times/${props.userId}`, 'GET')
     .then(data => {
@@ -37,7 +37,7 @@ const Alert = (props) => {
     }  
   }
 
-
+  console.log("USER ID "  + props.userId)
 
   // set up a useEffect to watch for state changes if state changes then call checkTimes()
   useEffect(()  => {
@@ -46,6 +46,7 @@ const Alert = (props) => {
     checkTimes()
 
   }, [currentTime])
+
 
   
   return (

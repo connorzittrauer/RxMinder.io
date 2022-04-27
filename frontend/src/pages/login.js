@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import APIService from "../components/APIService";
+import { useNavigate } from 'react-router-dom';
 
 const Login = (props) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-  
+    const navigate = useNavigate()
   
     const callLogin = () => {
         APIService.CallFetch('login', 'POST', {email, password})
@@ -32,7 +33,7 @@ const Login = (props) => {
             <br />
             <button className="loginButton" onClick={() => {
                 callLogin()
-   
+                navigate('/medications')
             }}type='button'>Login</button>
             <br />
             <br />
