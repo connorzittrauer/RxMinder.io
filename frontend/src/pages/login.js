@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import APIService from "../components/APIService";
 import { useNavigate } from 'react-router-dom';
 
@@ -7,13 +7,17 @@ const Login = (props) => {
     const [password, setPassword] = useState("")
     const navigate = useNavigate()
   
+    useEffect(() => {
+        if (props.logout) {
+            props.setLogin(false)
+            navigate('/medications')
+        }
+    })
     const callLogin = () => {
         APIService.CallFetch('login', 'POST', {email, password})
         .then((r) => {
             if(r.success) {
                 props.setLogin(r)
-                //if successful, set the global login variable equal to the current user ID
-  
             }
          })
         .catch((e) => console.log(e))

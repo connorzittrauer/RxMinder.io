@@ -10,8 +10,8 @@ import Home from './pages/home';
 import TimeMonitorProvider from './providers/TimeMonitorProvider';
 import Login from './pages/login';
 import Registration from './pages/registration';
-import AddPrescription from './components/AddPrescription';
 import Alert from './components/Alert';
+
 function App() {
     const [isLogin, setIsLogin] = useState(false)
     const [userId, setUserId] = useState(null)
@@ -22,7 +22,7 @@ function App() {
 
   return (
       <Router>
-      <NavBar />
+      <NavBar userId={userId}/>
       <TimeMonitorProvider>
         <Routes>
           <Route exact path='/' element={<Home />} />
@@ -30,9 +30,10 @@ function App() {
           <Route path='/medications' element={isLogin ? <Medications userId={userId} /> : <Login setLogin={(r) => loginHandler(r)} />} />
           <Route path='/about' element={<About/>} />
           <Route path='/interactions' element={isLogin ? <Interactions userId={userId} /> : <Login setLogin={(r) => loginHandler(r)} />} />
-          <Route path='/logout' element={<Login setLogin={(r) => loginHandler(r)} logout={true} />} />
+          <Route path='/logout' element={<Login setLogin={(r) => loginHandler(r)} logout={true}/>} />
         </Routes>
         <Alert userId={userId} />
+      
       </TimeMonitorProvider>
       </Router>
   );

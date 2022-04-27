@@ -21,10 +21,13 @@ const NavBar = () => {
             Interactions
           </NavLink>
           {/* <button onClick={() => navigate({isLogin: false})}>Can I do this</button>        */}
+          {/* <NavLink to="/logout" activeStyle>
+            Logout
+          </NavLink> */}
           <NavLink to="/logout" activeStyle>
             Logout
           </NavLink>
-          {/* <h1>Logout</h1> */}
+
         </NavMenu>
       </Nav>
     </>

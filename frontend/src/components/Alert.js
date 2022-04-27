@@ -10,21 +10,21 @@ const Alert = (props) => {
   const [rxTimes, setPrescriptionTimes] = useState([])
   const alert = useAlert()
 
-  // const getRxTimes = () => {
-  //   APIService.CallFetch('/times', 'GET')
-  //   .then(data => {
-  //     setPrescriptionTimes(data)
-  //   })
-  //   .catch(error=> console.log(error))
-  // }
-  
   const getRxTimes = () => {
-    APIService.CallFetch(`get-user-prescription-times/${props.userId}`, 'GET')
+    APIService.CallFetch('/times', 'GET')
     .then(data => {
       setPrescriptionTimes(data)
     })
     .catch(error=> console.log(error))
   }
+  
+  // const getRxTimes = () => {
+  //   APIService.CallFetch(`get-user-prescription-times/${props.userId}`, 'GET')
+  //   .then(data => {
+  //     setPrescriptionTimes(data)
+  //   })
+  //   .catch(error=> console.log(error))
+  // }
 
  
   const checkTimes = () => {
