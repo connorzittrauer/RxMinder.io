@@ -63,7 +63,7 @@ const About = () => {
             <p>
               1 in 2 people miss a dose, and 1 in 3 forget if they even took the medication. 
               Studies show that as many as 50% of people do not take their medications correctly. 
-              From these problems is how RxMinder was born, it that will help keep you on track of your medications. 
+              From these problems is how RxMinder was born, it will help keep you on track of your medications. 
               We have enough on our minds as it is, let this app help ease some of the burden. 
               We at RxMinder.io are dedicated to making sure you take your prescriptions on time.
             </p>
