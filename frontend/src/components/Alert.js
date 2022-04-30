@@ -12,7 +12,6 @@ const Alert = (props) => {
   const getRxTimes = () => {
     APIService.CallFetch(`get-user-prescription-times/${props.userId}`, 'GET')
     .then(data => {
-      console.log(data)
       setPrescriptionTimes(data)
     })
     .catch(error=> console.log(error))
@@ -21,6 +20,8 @@ const Alert = (props) => {
  
   const checkTimes = () => {
     for (let i = 0; i < rxTimes.length; i++){
+      console.log('current:', currentTime)
+      console.log('medicine time:', rxTimes[i].time + ' ' + rxTimes[i].meridiem)
       if (currentTime === (rxTimes[i].time + ' ' + rxTimes[i].meridiem)){
         //here we will eventually pass the RXname to the alert
         alert.show("It is time to take your medication!")
@@ -30,11 +31,10 @@ const Alert = (props) => {
 
   // set up a useEffect to watch for state changes if state changes then call checkTimes()
   useEffect(()  => {
-
     if(props.userId) {
       getRxTimes()
     }     
-  }, [props, props.userId])
+  }, [props, props.userId, currentTime])
 
   useEffect(() => {
     if(rxTimes.length>0) {
