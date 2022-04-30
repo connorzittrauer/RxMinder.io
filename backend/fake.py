@@ -19,7 +19,7 @@ def users(count=1):
         except IntegrityError:
             db.session.rollback()
 
-def perscriptions(count=10, numberTimes=3):
+def prescriptions(count=10, numberTimes=3):
     fake = Faker()
     fake.add_provider(ModelOrganism)
     i = 0
@@ -51,10 +51,10 @@ def times(p, numberTimes):
         except IntegrityError:
             db.session.rollback()
 
-def perscriptionAdd(userId=1, rxid=1):
+def prescriptionAdd(userId=1, rxid=1):
     u = User.query.filter_by(id=userId).first()
     p = Prescriptions.query.filter_by(id=rxid).first()
-    u.perscriptions.append(p)
+    u.prescription.append(p)
     db.session.add(u)
     try:
         db.session.commit()
@@ -70,11 +70,11 @@ def perscriptionAdd(userId=1, rxid=1):
 'after you are done, feel free to run "pip uninstall -r fakerReqs.txt" '
 ## Goal for another day, add functions to Flask CLI
 
-## The following makes perscriptions, the defualt is ten with between one and three dosage times, per perscription
-'perscriptions()'
+## The following makes prescriptions, the defualt is ten with between one and three dosage times, per prescription
+'prescriptions()'
 
 ## The following makes users, default number is one
 'users(3)'
 
-## The following adds perscriptions to a user, defaults to first user, first medicine
-'perscriptionAdd()'
+## The following adds prescriptions to a user, defaults to first user, first medicine
+'prescriptionAdd()'
