@@ -39,6 +39,35 @@
 .confirm {
     margin-left: 83px;
 }
-.regButton {
 
+.page {
+    padding-top: 2%;
+    width: 100%;
+    height: 100vh;
+    margin: auto;
+    text-align: center;
+}
+
+.hf1 {
+    font-size: 54px;
+    color: #05a3cd;
+}
+
+.hf3 {
+    font-size: 36px;
+    color: #61dafb;
+}
+
+.pContainer {
+    margin-top: 4%;
+    text-align: left;
+}
+
+p {
+    font-size: 20px;
+}
+
+.aboutContent {
+    margin: auto;
+    width: 50%;
 }

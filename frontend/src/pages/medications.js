@@ -15,10 +15,10 @@ const Medications = (props) => {
     }
 
 
-  
-    //when component mounts call getPrescriptions
     useEffect(() => {
-        getPrescriptions()
+        if (props.userId) {
+            getPrescriptions()
+        }
     }, [props.userId])
 
     //build prescription components out of state array
@@ -36,7 +36,7 @@ const Medications = (props) => {
     }
 
     return (
-        <div>
+        <div className="page">
             <Alert></Alert>
             <AddPrescription refresh={getPrescriptions} reverseOrder={reverseOrder} userId={props.userId}/>
             {renderPrescriptions()}

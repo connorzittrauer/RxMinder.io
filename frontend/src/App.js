@@ -21,21 +21,23 @@ function App() {
     }
 
   return (
-      <Router>
-      <NavBar userId={userId}/>
-      <TimeMonitorProvider>
-        <Routes>
-          <Route exact path='/' element={<Home />} />
-          <Route path='/registration' element={<Registration />} />
-          <Route path='/medications' element={isLogin ? <Medications userId={userId} /> : <Login setLogin={(r) => loginHandler(r)} />} />
-          <Route path='/about' element={<About/>} />
-          <Route path='/interactions' element={isLogin ? <Interactions userId={userId} /> : <Login setLogin={(r) => loginHandler(r)} />} />
-          <Route path='/logout' element={<Login setLogin={(r) => loginHandler(r)} logout={true}/>} />
-        </Routes>
-        <Alert userId={userId} />
-      
-      </TimeMonitorProvider>
-      </Router>
+    <div>
+        <Router>
+        <NavBar userId={userId}/>
+        <TimeMonitorProvider>
+          <Routes>
+            <Route exact path='/' element={<Home />} />
+            <Route path='/registration' element={<Registration />} />
+            <Route path='/medications' element={isLogin ? <Medications userId={userId} /> : <Login setLogin={(r) => loginHandler(r)} />} />
+            <Route path='/about' element={<About/>} />
+            <Route path='/interactions' element={isLogin ? <Interactions userId={userId} /> : <Login setLogin={(r) => loginHandler(r)} />} />
+            <Route path='/logout' element={<Login setLogin={(r) => loginHandler(r)} logout={true}/>} />
+          </Routes>
+          <Alert userId={userId} />
+        
+        </TimeMonitorProvider>
+        </Router>
+      </div>
   );
   }
 
