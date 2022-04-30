@@ -37,7 +37,8 @@ const Alert = (props) => {
     }  
   }
 
-  console.log("USER ID "  + props.userId)
+  
+  
 
   // set up a useEffect to watch for state changes if state changes then call checkTimes()
   useEffect(()  => {
