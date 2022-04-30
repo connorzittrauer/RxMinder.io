@@ -391,27 +391,7 @@ class RegistrationForm(FlaskForm):
 
 ### End Flask baeckend forms
 
-<<<<<<< HEAD
 #endregion
-=======
-### Command line functions
-## Make a new user: 
-'flask mkUser email@email.com fancyUserName password' ## Password is not hashed
-@app.cli.command("mkUser")
-@click.argument("uemail")
-@click.argument("uname")
-@click.argument("upassword")
-def mkUser(uemail, uname, upassword):
-    u = User(email=uemail,
-            username=uname,
-            password_hash=upassword)
-    db.session.add(u)
-    try:
-        db.session.commit()
-    except IntegrityError:
-        print("I can't let you do that, Kyle.")
-        db.session.rollback()
->>>>>>> ffa242e5ddc09baf9fd965f06ec7d795c6f1b33e
 
 if __name__ == '__main__':
     app.run(debug=True)
