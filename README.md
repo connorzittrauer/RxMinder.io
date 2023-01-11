@@ -1,4 +1,4 @@
-Rxminder.io was a group effort written by students at Bossier Parish Community College as their capstone project.
+Rxminder.io was a group effort written by students at Bossier Parish Community College as their capstone project. <br />
 Authors: <i>Brianna Conly, Walker Ray, Connor Zittrauer</i>
 
 <h1>Splash Page</h1>
